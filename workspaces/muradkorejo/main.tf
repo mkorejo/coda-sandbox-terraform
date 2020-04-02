@@ -24,5 +24,5 @@ module "sandbox_eks" {
   prefix = local.prefix
   tags   = local.tags
 
-  subnet_ids = concat(module.sandbox_vpc.private_subnets, module.sandbox_vpc.public_subnets)
+  subnet_ids = module.sandbox_vpc.private_subnets
 }
