@@ -1,5 +1,5 @@
 locals {
-  prefix = "murad-korejo"
+  prefix = "muradkorejo"
   region = "us-east-1"
 
   tags = map(
