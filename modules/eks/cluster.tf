@@ -8,10 +8,62 @@ resource "aws_eks_cluster" "eks_cluster" {
     subnet_ids = var.subnet_ids
   }
 
-  # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
-  # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
+  # Ensure that IAM policy attachments occur before and are deleted after EKS.
+  # Otherwise, EKS will not be able to properly delete EKS-managed EC2 infrastructure such as Security Groups.
   depends_on = [
     aws_iam_role_policy_attachment.eks_role-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.eks_role-AmazonEKSServicePolicy,
   ]
 }
+
+resource "aws_eks_node_group" "eks_cluster_node_group" {
+  cluster_name    = aws_eks_cluster.eks_cluster.name
+  instance_types  = var.node_group_instance_types
+  labels          = var.node_group_labels
+  node_group_name = var.node_group_name
+  node_role_arn   = aws_iam_role.eks_worker_role.arn
+  subnet_ids      = var.subnet_ids
+  tags            = var.tags
+
+  remote_access {
+    ec2_ssh_key = var.node_group_ssh_key
+    source_security_group_ids = [aws_security_group.eks_cluster_node_group_remote_access_sg.id]
+  }
+
+  scaling_config {
+    desired_size = 1
+    max_size     = 3
+    min_size     = 1
+  }
+
+  # Ensure that IAM policy attachments occur before and are deleted after EKS.
+  # Otherwise, EKS will not be able to properly delete EKS-managed EC2 infrastructure such as Security Groups.
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_worker_role-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks_worker_role-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks_worker_role-AmazonEC2ContainerRegistryReadOnly,
+  ]
+}
+
+resource "aws_security_group" "eks_cluster_node_group_remote_access_sg" {
+  name        = join("-", [aws_eks_cluster.eks_cluster.name, var.node_group_name, "remote-access"])
+  description = "SSH access for EKS worker nodes"
+  tags        = var.tags
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "tcp/22 inbound"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+

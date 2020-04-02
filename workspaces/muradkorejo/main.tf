@@ -5,6 +5,7 @@ module "sandbox_vpc" {
 
   name = local.prefix
   cidr = "10.0.0.0/16"
+  tags = local.tags
 
   azs             = ["us-east-1c", "us-east-1d", "us-east-1f"]
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
@@ -14,8 +15,6 @@ module "sandbox_vpc" {
   enable_nat_gateway   = true
   single_nat_gateway   = true
   enable_s3_endpoint   = true
-
-  tags = local.tags
 }
 
 module "sandbox_eks" {
@@ -24,5 +23,8 @@ module "sandbox_eks" {
   prefix = local.prefix
   tags   = local.tags
 
+  vpc_id     = module.sandbox_vpc.vpc_id
   subnet_ids = module.sandbox_vpc.private_subnets
+
+  node_group_ssh_key = "muradkorejo"
 }
