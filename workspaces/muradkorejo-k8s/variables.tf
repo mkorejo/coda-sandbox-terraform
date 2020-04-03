@@ -1,4 +1,5 @@
 variable "cluster_name" {
   type = string
   description = "Name of the EKS cluster for provider configuration"
+  default = join("-",[local.prefix, "eks"])
 }
