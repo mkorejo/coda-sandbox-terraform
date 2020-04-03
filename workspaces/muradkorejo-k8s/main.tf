@@ -1,3 +1,8 @@
+data "helm_repository" "argo" {
+  name = "argo"
+  url  = "https://argoproj.github.io/argo-helm"
+}
+
 resource "kubernetes_namespace" "argocd" {
   metadata {
     name = "argocd"
@@ -6,7 +11,7 @@ resource "kubernetes_namespace" "argocd" {
 
 resource "helm_release" "argocd" {
   name       = "argocd"
-  repository = "https://argoproj.github.io/argo-helm"
+  repository = data.helm_repository.argo.metadata[0].name
   chart      = "argocd"
   namespace  = "argocd"
 }
