@@ -11,10 +11,3 @@ resource "helm_release" "argocd" {
   version    = "2.0.3"
   namespace  = "argocd"
 }
-
-resource "helm_release" "infra_apps" {
-  name       = "infra_apps"
-  repository = "https://github.com/mkorejo/argo-infra-apps.git"
-  chart      = "infra_apps"
-  namespace  = "argocd"
-}
