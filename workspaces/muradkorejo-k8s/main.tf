@@ -12,6 +12,6 @@ resource "kubernetes_namespace" "argocd" {
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = data.helm_repository.argo.metadata[0].name
-  chart      = "argocd"
+  chart      = "argo-cd"
   namespace  = "argocd"
 }
