@@ -13,5 +13,6 @@ resource "helm_release" "argocd" {
   name       = "argocd"
   repository = data.helm_repository.argo.metadata[0].name
   chart      = "argo-cd"
+  version    = "2.0.3"
   namespace  = "argocd"
 }
