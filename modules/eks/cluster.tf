@@ -7,6 +7,8 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   vpc_config {
     subnet_ids = var.subnet_ids
+
+    endpoint_private_access = true
   }
 
   # Ensure that IAM policy attachments occur before and are deleted after EKS.
