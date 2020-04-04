@@ -7,8 +7,14 @@ module "sandbox_vpc" {
   cidr = "10.0.0.0/16"
   tags = local.tags
 
-  private_subnet_tags = {"kubernetes.io/cluster/muradkorejo-eks" = "shared"}
-  public_subnet_tags  = {"kubernetes.io/cluster/muradkorejo-eks" = "shared"}
+  private_subnet_tags = {
+    "kubernetes.io/cluster/muradkorejo-eks" = "shared"
+    "kubernetes.io/role/internal-elb" = "1"
+  }
+  public_subnet_tags  = {
+    "kubernetes.io/cluster/muradkorejo-eks" = "shared"
+    "kubernetes.io/role/elb"
+  }
 
   azs             = ["us-east-1c", "us-east-1d", "us-east-1f"]
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
@@ -27,7 +33,7 @@ module "sandbox_eks" {
   tags   = local.tags
 
   vpc_id     = module.sandbox_vpc.vpc_id
-  subnet_ids = module.sandbox_vpc.private_subnets
+  subnet_ids = join(module.sandbox_vpc.private_subnets, module.sandbox_vpc.public_subnets)
 
   node_group_ssh_key = "muradkorejo"
 }

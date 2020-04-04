@@ -1,3 +1,4 @@
+# https://www.terraform.io/docs/providers/aws/r/eks_cluster.html
 resource "aws_eks_cluster" "eks_cluster" {
   name     = join("-", [var.prefix, "eks"])
   role_arn = aws_iam_role.eks_role.arn
@@ -16,6 +17,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
+# https://www.terraform.io/docs/providers/aws/r/eks_node_group.html
 resource "aws_eks_node_group" "eks_cluster_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   instance_types  = var.node_group_instance_types

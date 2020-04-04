@@ -1,0 +1,2 @@
+# Amazon EKS
+A simple Terraform module that creates a minimal IAM role for worker nodes, a security group for remote access, the EKS cluster control plane and (currently) one node group. See [variables.tf](./variables.tf) for a complete list of supported variables.
