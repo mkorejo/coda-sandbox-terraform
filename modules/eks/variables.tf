@@ -33,7 +33,7 @@ variable "prefix" {
 }
 
 variable "subnet_ids" {
-  type = list
+  type = list(string)
   description = "List of subnet IDs for the cluster"
 }
 
