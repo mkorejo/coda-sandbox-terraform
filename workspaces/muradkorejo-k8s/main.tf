@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "argocd" {
 
 resource "helm_release" "crds" {
   name = "crds"
-  repository = "http://mkorejo.github.io/helm_repo"
+  repository = "http://mkorejo.github.io/charts_repo"
   chart = "crds"
   namespace = "kube-system"
 }
