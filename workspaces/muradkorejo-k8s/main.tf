@@ -5,10 +5,10 @@ resource "kubernetes_namespace" "argocd" {
 }
 
 resource "helm_release" "crds" {
-  name = "crds"
-  repository = "http://mkorejo.github.io/charts_repo"
-  chart = "crds"
-  namespace = "kube-system"
+  name       = "crds"
+  repository = "https://mkorejo.github.io/charts_repo"
+  chart      = "crds"
+  namespace  = "kube-system"
 }
 
 resource "helm_release" "argocd" {
@@ -22,3 +22,4 @@ resource "helm_release" "argocd" {
     kubernetes_namespace.argocd
   ]
 }
+
