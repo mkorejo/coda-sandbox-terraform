@@ -17,4 +17,8 @@ resource "helm_release" "argocd" {
   chart      = "argo-cd"
   version    = "2.0.3"
   namespace  = "argocd"
+
+  depends_on = [
+    kubernetes_namespace.argocd
+  ]
 }
