@@ -1,15 +1,6 @@
-data "aws_eks_cluster" "sandbox_eks" {
-  name = var.cluster_name != "" ? var.cluster_name : join("-", [local.prefix, "eks"])
-}
-
-data "aws_eks_cluster_auth" "sandbox_eks" {
-  name = var.cluster_name != "" ? var.cluster_name : join("-", [local.prefix, "eks"])
-}
-
 provider "aws" {
   version = "2.56.0"
-
-  region = "us-east-1"
+  region  = "us-east-1"
 }
 
 provider "helm" {
