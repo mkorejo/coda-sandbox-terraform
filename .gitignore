@@ -1,1 +1,2 @@
 **/.terraform
+**/local.auto.tfvars
