@@ -18,14 +18,14 @@ resource "helm_release" "argocd" {
 
 resource "helm_release" "crds" {
   name       = "crds"
-  repository = "https://mkorejo.github.io/charts_repo"
+  repository = "https://mkorejo.github.io/helm_charts"
   chart      = "crds"
   namespace  = "kube-system"
 }
 
 resource "helm_release" "infra_apps" {
   name       = "argocd"
-  repository = "https://mkorejo.github.io/charts_repo"
+  repository = "https://mkorejo.github.io/helm_charts"
   chart      = "infra-apps"
   namespace  = "argocd"
 
