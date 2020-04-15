@@ -24,7 +24,7 @@ resource "helm_release" "crds" {
 }
 
 resource "helm_release" "infra_apps" {
-  name       = "argocd"
+  name       = "infra-apps"
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "infra-apps"
   namespace  = "argocd"
