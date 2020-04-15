@@ -61,7 +61,7 @@ resource "aws_iam_role_policy_attachment" "eks_worker_role-AmazonEC2ContainerReg
 resource "aws_iam_openid_connect_provider" "eks_oidc" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = []
-  url             = "${aws_eks_cluster.eks_cluster.identity.0.oidc.0.issuer}"
+  url             = aws_eks_cluster.eks_cluster.identity.0.oidc.0.issuer
 }
 
 data "aws_iam_policy_document" "service_account_assume_role_policy" {
@@ -71,12 +71,12 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", "")}:sub"
+      variable = join(":", [replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", ""), "sub"])
       values   = ["system:serviceaccount:kube-system:aws-node"]
     }
 
     principals {
-      identifiers = ["${aws_iam_openid_connect_provider.eks_oidc.arn}"]
+      identifiers = [aws_iam_openid_connect_provider.eks_oidc.arn]
       type        = "Federated"
     }
   }
@@ -86,7 +86,7 @@ resource "aws_iam_role" "eks_external_dns_role" {
   name = join("-", [var.prefix, "eks-external-dns-role"])
   tags = var.tags
 
-  assume_role_policy = "${data.aws_iam_policy_document.service_account_assume_role_policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.service_account_assume_role_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "eks_external_dns_role-external-dns-route53-policy" {
