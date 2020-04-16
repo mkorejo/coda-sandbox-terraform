@@ -40,12 +40,12 @@ resource "helm_release" "infra_apps" {
   }
 
   set {
-    name  = "cert_manager.spec.serviceAccount.annotations.'eks.amazonaws.com/role-arn'"
+    name  = "cert_manager.spec.serviceAccount.annotations.'eks\.amazonaws\.com/role-arn'"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
   set {
-    name  = "external_dns.spec.rbac.serviceAccountAnnotations.'eks.amazonaws.com/role-arn'"
+    name  = "external_dns.spec.rbac.serviceAccountAnnotations.'eks\.amazonaws\.com/role-arn'"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
