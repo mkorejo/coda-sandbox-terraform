@@ -30,7 +30,7 @@ resource "helm_release" "infra_apps" {
   namespace  = "argocd"
 
   set {
-    name  = "cert_manager.spec.issuer.aws.hostedZoneID"
+    name  = "cert_manager.issuer.aws.hostedZoneID"
     value = var.aws_hosted_zone_id
   }
 
