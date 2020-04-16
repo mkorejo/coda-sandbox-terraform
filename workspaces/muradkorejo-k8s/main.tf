@@ -35,6 +35,11 @@ resource "helm_release" "infra_apps" {
   }
 
   set {
+    name  = "cert_manager.issuer.aws.iam_sa.role"
+    value = data.aws_iam_role.eks_external_dns_role.arn
+  }
+
+  set {
     name  = "cert_manager.spec.serviceAccount.annotations"
     value = join(" ", ["eks.amazonaws.com/role-arn:", data.aws_iam_role.eks_external_dns_role.arn])
   }
