@@ -49,6 +49,11 @@ resource "helm_release" "infra_apps" {
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
+  set {
+    name  = "nginx_ingress_public.spec.controller.autoscaling.minReplicas"
+    value = "1"
+  }
+
   depends_on = [
     helm_release.argocd,
     helm_release.crds
