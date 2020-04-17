@@ -35,5 +35,6 @@ module "sandbox_eks" {
   vpc_id     = module.sandbox_vpc.vpc_id
   subnet_ids = concat(module.sandbox_vpc.private_subnets, module.sandbox_vpc.public_subnets)
 
-  node_group_ssh_key = "muradkorejo"
+  node_group_scale_desired = "1"
+  node_group_ssh_key       = "muradkorejo"
 }

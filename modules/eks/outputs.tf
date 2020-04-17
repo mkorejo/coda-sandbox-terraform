@@ -9,3 +9,7 @@ output "eks_external_dns_role_arn" {
 output "eks_kubeconfig_ca_data" {
   value = aws_eks_cluster.eks_cluster.certificate_authority.0.data
 }
+
+output "kms_key" {
+  value = aws_kms_key.kms_key.key_id
+}

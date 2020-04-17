@@ -22,6 +22,12 @@ variable "node_group_name" {
   default = "infra"
 }
 
+variable "node_group_scale_desired" {
+  type = string
+  description = "Desired node count for this pool"
+  default = "2"
+}
+
 variable "node_group_ssh_key" {
   type = string
   description = "EC2 key pair for remote access to nodes in the cluster's initial node group"
