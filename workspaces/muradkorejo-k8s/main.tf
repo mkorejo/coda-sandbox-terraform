@@ -106,7 +106,7 @@ resource "helm_release" "infra_apps" {
 
     seal "awskms" {
       region     = local.region
-      kms_key_id = "d7c1ffd9-8cce-45e7-be4a-bb38dd205966"
+      kms_key_id = data.aws_kms_alias.eks_kms_key.key_id
     }
     EOT
   }
