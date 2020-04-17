@@ -19,9 +19,14 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
   }
 }
 
+# https://github.com/terraform-providers/terraform-provider-aws/issues/10104#issuecomment-534466094
+locals {
+  eks-oidc-thumbprint = "419db4697b6a90064fffca7871bd80dd952c4335"
+}
+
 resource "aws_iam_openid_connect_provider" "eks_oidc" {
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = []
+  thumbprint_list = [local.eks-oidc-thumbprint]
   url             = aws_eks_cluster.eks_cluster.identity.0.oidc.0.issuer
 }
 
