@@ -13,7 +13,7 @@ data "aws_eks_cluster_auth" "sandbox_eks" {
 }
 
 data "aws_iam_role" "eks_external_dns_role" {
-  name = join("-", [local.prefix, "eks-external-dns-role"])
+  name = join("-", [local.prefix, "eks-external-dns"])
 }
 
 data "aws_kms_alias" "eks_kms_key" {
