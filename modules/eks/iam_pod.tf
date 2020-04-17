@@ -9,7 +9,11 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
     condition {
       test     = "StringEquals"
       variable = join(":", [replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", ""), "sub"])
-      values   = ["system:serviceaccount:kube-system:aws-node"]
+      values   = [
+        "system:serviceaccount:cert-manager:*"
+        "system:serviceaccount:external-dns:*"
+        "system:serviceaccount:vault:*"
+      ]
     }
 
     principals {
