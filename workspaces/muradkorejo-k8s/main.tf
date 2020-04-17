@@ -105,8 +105,8 @@ resource "helm_release" "infra_apps" {
     service_registration "kubernetes" {}
 
     seal "awskms" {
-      region     = ${local.region}
-      kms_key_id = ${data.aws_kms_alias.eks_kms_key.target_key_id}
+      region     = \\"${local.region}\\"
+      kms_key_id = \\"${data.aws_kms_alias.eks_kms_key.target_key_id}\\"
     }
     EOT
   }
