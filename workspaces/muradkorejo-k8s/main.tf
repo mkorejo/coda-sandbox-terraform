@@ -1,3 +1,15 @@
+locals {
+  prefix = "muradkorejo"
+  region = "us-east-1"
+
+  tags = map(
+    "Owner",       "Murad Korejo",
+    "Owner Email", "murad.korejo@coda.global",
+    "Managed By",  "Terraform",
+    "Source",      "https://github.com/mkorejo/coda-sandbox-terraform"
+  )
+}
+
 resource "kubernetes_namespace" "argocd" {
   metadata {
     name = "argocd"
@@ -30,8 +42,18 @@ resource "helm_release" "infra_apps" {
   namespace  = "argocd"
 
   set {
+    name  = "cert_manager.issuer.email"
+    value = "murad.korejo@coda.global"
+  }
+
+  set {
     name  = "cert_manager.issuer.aws.hostedZoneID"
-    value = var.aws_hosted_zone_id
+    value = data.aws_route53_zone.hosted_zone.zone_id
+  }
+
+  set {
+    name  = "cert_manager.issuer.aws.region"
+    value = local.region
   }
 
   set {
@@ -45,6 +67,11 @@ resource "helm_release" "infra_apps" {
   }
 
   set {
+    name  = "external_dns.spec.domainFilters"
+    value = "{coda.run}"
+  }
+
+  set {
     name  = "external_dns.spec.rbac.serviceAccountAnnotations.eks\\.amazonaws\\.com/role-arn"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
@@ -52,6 +79,36 @@ resource "helm_release" "infra_apps" {
   set {
     name  = "nginx_ingress_public.spec.controller.autoscaling.minReplicas"
     value = "1"
+  }
+
+  set {
+    name  = "nginx_ingress_public.spec.controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
+    value = data.aws_acm_certificate.eks_elb_cert.arn
+  }
+
+  set {
+    name  = "vault.spec.server.ha.config"
+    value = <<-EOT
+    ui = true
+
+    listener "tcp" {
+      tls_disable = 1
+      address = "[::]:8200"
+      cluster_address = "[::]:8201"
+    }
+
+    storage "consul" {
+      path = "vault"
+      address = "HOST_IP:8500"
+    }
+
+    service_registration "kubernetes" {}
+
+    seal "awskms" {
+      region     = local.region
+      kms_key_id = "d7c1ffd9-8cce-45e7-be4a-bb38dd205966"
+    }
+    EOT
   }
 
   depends_on = [

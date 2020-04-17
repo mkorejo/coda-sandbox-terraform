@@ -3,6 +3,7 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+# https://www.terraform.io/docs/providers/aws/d/eks_cluster_auth.html
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.sandbox_eks.endpoint
