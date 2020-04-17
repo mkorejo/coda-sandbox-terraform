@@ -4,3 +4,8 @@ resource "aws_kms_key" "kms_key" {
 
   tags = var.tags
 }
+
+resource "aws_kms_alias" "kms_alias" {
+  name          = join("", ["alias/", var.prefix, "-eks"])
+  target_key_id = aws_kms_key.kms_key.key_id
+}
