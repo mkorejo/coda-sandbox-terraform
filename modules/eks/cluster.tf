@@ -36,8 +36,8 @@ resource "aws_eks_node_group" "eks_cluster_node_group" {
 
   scaling_config {
     desired_size = var.node_group_scale_desired
-    max_size     = 3
-    min_size     = 1
+    max_size     = var.node_group_scale_max
+    min_size     = var.node_group_scale_min
   }
 
   # Ensure that IAM policy attachments occur before and are deleted after EKS.

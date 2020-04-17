@@ -25,7 +25,19 @@ variable "node_group_name" {
 variable "node_group_scale_desired" {
   type = string
   description = "Desired node count for this pool"
-  default = "2"
+  default = "3"
+}
+
+variable "node_group_scale_max" {
+  type = string
+  description = "Maximum node count for this pool"
+  default = "5"
+}
+
+variable "node_group_scale_min" {
+  type = string
+  description = "Minimum node count for this pool"
+  default = "1"
 }
 
 variable "node_group_ssh_key" {
