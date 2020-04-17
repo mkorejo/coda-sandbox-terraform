@@ -52,13 +52,13 @@ resource "aws_iam_role_policy" "vault_kms_unseal" {
   role   = aws_iam_role.eks_vault_unseal_role.id
   policy = jsonencode({
     Statement = [{
-      Actions = [
+      Action = [
         "kms:Encrypt",
         "kms:Decrypt",
         "kms:DescribeKey",
       ]
       Effect = "Allow"
-      Resources = "*"
+      Resource = "*"
     }]
     Version = "2012-10-17"
   })
