@@ -33,7 +33,7 @@ resource "aws_iam_role" "eks_external_dns_role" {
   assume_role_policy = data.aws_iam_policy_document.service_account_assume_role_policy.json
 }
 
-# ***** This policy attachment is dependent on an existing policy in the account. *****
+# ***** This policy attachment is dependent on an existing IAM policy in the account. *****
 resource "aws_iam_role_policy_attachment" "eks_external_dns_role-external-dns-route53-policy" {
   policy_arn = "arn:aws:iam::458527324684:policy/external-dns-route53-policy"
   role       = aws_iam_role.eks_external_dns_role.name
