@@ -30,26 +30,6 @@ resource "helm_release" "infra_apps" {
   namespace  = "argocd"
 
   set {
-    name  = "certManager.issuer.email"
-    value = "murad.korejo@coda.global"
-  }
-
-  set {
-    name  = "certManager.issuer.aws.hostedZoneID"
-    value = data.aws_route53_zone.hosted_zone.zone_id
-  }
-
-  set {
-    name  = "certManager.issuer.aws.region"
-    value = local.region
-  }
-
-  set {
-    name  = "certManager.issuer.aws.iam_sa.role"
-    value = data.aws_iam_role.eks_external_dns_role.arn
-  }
-
-  set {
     name  = "certManager.spec.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
@@ -105,3 +85,33 @@ resource "helm_release" "infra_apps" {
   ]
 }
 
+resource "helm_release" "route53_issuer" {
+  name       = "cert-manager-issuer"
+  repository = "https://mkorejo.github.io/helm_charts"
+  chart      = "cert-manager-issuer"
+  namespace  = "cert-manager"
+
+  set {
+    name  = "route53.email"
+    value = "murad.korejo@coda.global"
+  }
+
+  set {
+    name  = "route53.hostedZoneID"
+    value = data.aws_route53_zone.hosted_zone.zone_id
+  }
+
+  set {
+    name  = "route53.region"
+    value = local.region
+  }
+
+  set {
+    name  = "route53.iam_sa.role"
+    value = data.aws_iam_role.eks_external_dns_role.arn
+  }
+
+  depends_on = [
+    helm_release.infra_apps
+  ]
+}
