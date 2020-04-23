@@ -30,6 +30,11 @@ resource "helm_release" "infra_apps" {
   namespace  = "argocd"
 
   set {
+    name  = "cert_manager.source.targetRevision"
+    value = "v0.15.0-alpha.1"
+  }
+
+  set {
     name  = "cert_manager.issuer.email"
     value = "murad.korejo@coda.global"
   }
