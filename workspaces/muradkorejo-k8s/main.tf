@@ -55,12 +55,12 @@ resource "helm_release" "infra_apps" {
   }
 
   set {
-    name  = "external_dns.spec.domainFilters"
+    name  = "externalDNS.spec.domainFilters"
     value = "{coda.run}"
   }
 
   set {
-    name  = "external_dns.spec.rbac.serviceAccountAnnotations.eks\\.amazonaws\\.com/role-arn"
+    name  = "externalDNS.spec.rbac.serviceAccountAnnotations.eks\\.amazonaws\\.com/role-arn"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
