@@ -106,7 +106,7 @@ resource "helm_release" "infra_apps" {
 
   depends_on = [
     helm_release.argocd,
-    helm_release.crds
+  # helm_release.crds
   ]
 }
 
