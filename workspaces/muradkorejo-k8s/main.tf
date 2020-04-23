@@ -16,12 +16,12 @@ resource "helm_release" "argocd" {
   ]
 }
 
-# resource "helm_release" "crds" {
-#   name       = "crds"
-#   repository = "https://mkorejo.github.io/helm_charts"
-#   chart      = "crds"
-#   namespace  = "kube-system"
-# }
+resource "helm_release" "crds" {
+  name       = "crds"
+  repository = "https://mkorejo.github.io/helm_charts"
+  chart      = "crds"
+  namespace  = "kube-system"
+}
 
 resource "helm_release" "infra_apps" {
   name       = "infra-apps"
@@ -30,32 +30,27 @@ resource "helm_release" "infra_apps" {
   namespace  = "argocd"
 
   set {
-    name  = "cert_manager.source.targetRevision"
-    value = "v0.15.0-alpha.1"
-  }
-
-  set {
-    name  = "cert_manager.issuer.email"
+    name  = "certManager.issuer.email"
     value = "murad.korejo@coda.global"
   }
 
   set {
-    name  = "cert_manager.issuer.aws.hostedZoneID"
+    name  = "certManager.issuer.aws.hostedZoneID"
     value = data.aws_route53_zone.hosted_zone.zone_id
   }
 
   set {
-    name  = "cert_manager.issuer.aws.region"
+    name  = "certManager.issuer.aws.region"
     value = local.region
   }
 
   set {
-    name  = "cert_manager.issuer.aws.iam_sa.role"
+    name  = "certManager.issuer.aws.iam_sa.role"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
   set {
-    name  = "cert_manager.spec.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    name  = "certManager.spec.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
@@ -106,7 +101,7 @@ resource "helm_release" "infra_apps" {
 
   depends_on = [
     helm_release.argocd,
-  # helm_release.crds
+    helm_release.crds
   ]
 }
 
