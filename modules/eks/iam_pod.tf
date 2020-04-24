@@ -3,7 +3,17 @@
 # https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-technical-overview.html
 data "aws_iam_policy_document" "service_account_assume_role_policy" {
   statement {
-    actions = ["sts:AssumeRole", "sts:AssumeRoleWithWebIdentity"]
+    actions    = ["sts:AssumeRole"]
+    effect     = "Allow"
+
+    principals {
+      identifiers = [join("", ["arn:aws:iam::*:role/", var.prefix, "-eks-external-dns"])]
+      type        = "AWS"
+    }
+  }
+
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
     effect  = "Allow"
 
     condition {
