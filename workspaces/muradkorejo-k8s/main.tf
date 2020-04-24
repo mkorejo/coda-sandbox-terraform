@@ -29,6 +29,12 @@ resource "helm_release" "infra_apps" {
   chart      = "infra-apps"
   namespace  = "argocd"
 
+  # https://github.com/vmware-tanzu/velero-plugin-for-aws/issues/17
+  set {
+    name  = "certManager.spec.securityContext.fsGroup"
+    value = "65534"
+  }
+
   set {
     name  = "certManager.spec.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = data.aws_iam_role.eks_external_dns_role.arn
@@ -85,6 +91,17 @@ resource "helm_release" "infra_apps" {
   ]
 }
 
+# https://github.com/hashicorp/terraform/issues/17726#issuecomment-377357866
+resource "null_resource" "delay" {
+  provisioner "local-exec" {
+    command = "sleep 10"
+  }
+
+  triggers = {
+    "infra_apps" = "${helm_release.infra_apps.id}"
+  }
+}
+
 resource "helm_release" "route53_issuer" {
   name       = "cert-manager-issuer"
   repository = "https://mkorejo.github.io/helm_charts"
@@ -107,6 +124,7 @@ resource "helm_release" "route53_issuer" {
   }
 
   depends_on = [
-    helm_release.infra_apps
+    helm_release.infra_apps,
+    null_resource.delay
   ]
 }
