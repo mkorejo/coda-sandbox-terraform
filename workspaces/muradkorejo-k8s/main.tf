@@ -102,11 +102,6 @@ resource "helm_release" "route53_issuer" {
   }
 
   set {
-    name  = "route53.region"
-    value = local.region
-  }
-
-  set {
     name  = "route53.iam_sa.role"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
