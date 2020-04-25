@@ -1,3 +1,7 @@
+variable "aws_account_id" {
+  type = string
+}
+
 variable "k8s_version" {
   type = string
   description = "Kubernetes version"
