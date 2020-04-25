@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
     effect     = "Allow"
 
     principals {
-      identifiers = [join("", ["arn:aws:iam::*:role/", var.prefix, "-eks-external-dns"])]
+      identifiers = ["arn:aws:iam::458527324684:role/muradkorejo-eks-external-dns"]
       type        = "AWS"
     }
   }
