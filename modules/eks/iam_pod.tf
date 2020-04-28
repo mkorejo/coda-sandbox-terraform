@@ -58,7 +58,7 @@ resource "aws_iam_role" "eks_external_dns_role" {
   name = join("-", [var.prefix, "eks-external-dns"])
   tags = var.tags
 
-  assume_role_policy = data.aws_iam_policy_document.external_dns_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.service_account_assume_role_policy.json
 }
 
 resource "aws_iam_role_policy" "external_dns" {
