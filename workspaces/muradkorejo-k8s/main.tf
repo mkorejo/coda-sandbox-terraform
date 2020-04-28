@@ -94,7 +94,7 @@ resource "helm_release" "infra_apps" {
 # https://github.com/hashicorp/terraform/issues/17726#issuecomment-377357866
 resource "null_resource" "delay" {
   provisioner "local-exec" {
-    command = "sleep 10"
+    command = "sleep 20"
   }
 
   triggers = {
