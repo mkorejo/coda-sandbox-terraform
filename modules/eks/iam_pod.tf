@@ -7,8 +7,14 @@ data "aws_iam_policy_document" "external_dns_assume_role_policy" {
     effect     = "Allow"
 
     principals {
-      identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":role/", var.prefix, "-eks-external-dns"])]
+      identifiers = [var.aws_account_id]
       type        = "AWS"
+    }
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values   = [join("", ["arn:aws:sts::", var.aws_account_id, ":assumed-role/", var.prefix, "-eks-external-dns/*"])]
     }
   }
 }
@@ -18,15 +24,15 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     effect  = "Allow"
 
+    principals {
+      identifiers = [aws_iam_openid_connect_provider.eks_oidc.arn]
+      type        = "Federated"
+    }
+
     condition {
       test     = "StringLike"
       variable = join(":", [replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", ""), "sub"])
       values   = ["system:serviceaccount:*:*"]
-    }
-
-    principals {
-      identifiers = [aws_iam_openid_connect_provider.eks_oidc.arn]
-      type        = "Federated"
     }
   }
 }
