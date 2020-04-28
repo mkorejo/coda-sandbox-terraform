@@ -1,27 +1,6 @@
 # Setup IAM Roles for Kubernetes Service Accounts
 # https://www.terraform.io/docs/providers/aws/r/eks_cluster.html#enabling-iam-roles-for-service-accounts
 # https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-technical-overview.html
-data "aws_iam_policy_document" "external_dns_assume_role_policy" {
-  statement {
-    actions    = ["sts:AssumeRole", "sts:AssumeRoleWithWebIdentity"]
-    effect     = "Allow"
-
-    principals {
-      identifiers = [var.aws_account_id]
-      type        = "AWS"
-    }
-
-  # condition {
-  #   test     = "ArnLike"
-  #   variable = "aws:SourceArn"
-  #   values   = [
-  #     join("", ["arn:aws:sts::", var.aws_account_id, ":role/", var.prefix, "-eks-external-dns"]),
-  #     join("", ["arn:aws:sts::", var.aws_account_id, ":assumed-role/", var.prefix, "-eks-external-dns/*"])
-  #   ]
-  # }
-  }
-}
-
 data "aws_iam_policy_document" "service_account_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -36,6 +15,23 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
       test     = "StringLike"
       variable = join(":", [replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", ""), "sub"])
       values   = ["system:serviceaccount:*:*"]
+    }
+  }
+
+  # Required for cert-manager
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":root"])]
+      type        = "AWS"
+    }
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values   = [join("", ["arn:aws:sts::", var.aws_account_id, ":assumed-role/", var.prefix, "-eks-external-dns/*"])]
     }
   }
 }
