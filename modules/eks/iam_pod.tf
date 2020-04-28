@@ -14,7 +14,10 @@ data "aws_iam_policy_document" "external_dns_assume_role_policy" {
     condition {
       test     = "ArnLike"
       variable = "aws:SourceArn"
-      values   = [join("", ["arn:aws:sts::", var.aws_account_id, ":assumed-role/", var.prefix, "-eks-external-dns/*"])]
+      values   = [
+        join("", ["arn:aws:sts::", var.aws_account_id, ":role/", var.prefix, "-eks-external-dns"]),
+        join("", ["arn:aws:sts::", var.aws_account_id, ":assumed-role/", var.prefix, "-eks-external-dns/*"])
+      ]
     }
   }
 }
