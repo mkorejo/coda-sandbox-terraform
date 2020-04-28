@@ -23,10 +23,10 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
     actions = ["sts:AssumeRole"]
     effect  = "Allow"
 
-    principals {
-      identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":root"])]
-      type        = "AWS"
-    }
+  # principals {
+  #   identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":root"])]
+  #   type        = "AWS"
+  # }
 
     condition {
       test     = "ArnLike"
