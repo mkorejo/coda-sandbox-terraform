@@ -36,7 +36,7 @@ module "sandbox_eks" {
   subnet_ids = concat(module.sandbox_vpc.private_subnets, module.sandbox_vpc.public_subnets)
 
   aws_account_id           = var.aws_account_id
-  node_group_scale_desired = "2"
+  node_group_scale_desired = "3"
   node_group_scale_max     = "5"
   node_group_scale_min     = "1"
   node_group_ssh_key       = "muradkorejo"
