@@ -50,10 +50,10 @@ resource "helm_release" "infra_apps" {
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
 
-  # set {
-  #   name  = "nginx_ingress_public.spec.controller.autoscaling.minReplicas"
-  #   value = "1"
-  # }
+  set {
+    name  = "nginx_ingress_public.spec.controller.autoscaling.minReplicas"
+    value = "1"
+  }
 
   set {
     name  = "nginx_ingress_public.spec.controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
