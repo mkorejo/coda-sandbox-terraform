@@ -27,12 +27,6 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
       identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":role/", var.prefix, "-eks-external-dns"])]
       type        = "AWS"
     }
-
-  # condition {
-  #   test     = "StringLike"
-  #   variable = "sts:RoleSessionName"
-  #   values   = ["system:serviceaccount:*:*"]
-  # }
   }
 }
 
