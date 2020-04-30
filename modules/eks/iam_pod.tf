@@ -24,7 +24,8 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
     effect  = "Allow"
 
     principals {
-      identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":role/", var.prefix, "-eks-external-dns"])]
+    # identifiers = [join("", ["arn:aws:iam::", var.aws_account_id, ":role/", var.prefix, "-eks-external-dns"])]
+      identifiers = ["*"]
       type        = "AWS"
     }
   }
