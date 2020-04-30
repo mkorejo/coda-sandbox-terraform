@@ -4,6 +4,18 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_iam_policy_document" "ec2_trust" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      identifiers = ["ec2.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
+
 # https://rancher.com/docs/rancher/v2.x/en/cluster-provisioning/rke-clusters/cloud-providers/amazon/
 resource "aws_iam_policy" "rancher_control_plane" {
   name        = "rancher-control-plane"
@@ -80,6 +92,18 @@ resource "aws_iam_policy" "rancher_control_plane" {
 EOF
 }
 
+resource "aws_iam_role" "rancher_control_plane" {
+  name = "rancher-control-plane"
+  tags = local.tags
+
+  assume_role_policy = data.aws_iam_policy_document.ec2_trust
+}
+
+resource "aws_iam_role_policy_attachment" "rancher_control_plane" {
+  role       = aws_iam_role.rancher_control_plane.name
+  policy_arn = aws_iam_policy.rancher_control_plane.arn
+}
+
 resource "aws_iam_policy" "rancher_worker" {
   name        = "rancher-worker"
   description = "Allows etcd and worker nodes in Rancher-provisioned clusters to interact with EC2"
@@ -106,4 +130,16 @@ resource "aws_iam_policy" "rancher_worker" {
 ]
 }
 EOF
+}
+
+resource "aws_iam_role" "rancher_worker" {
+  name = "rancher-worker"
+  tags = local.tags
+
+  assume_role_policy = data.aws_iam_policy_document.ec2_trust
+}
+
+resource "aws_iam_role_policy_attachment" "rancher_worker" {
+  role       = aws_iam_role.rancher_worker.name
+  policy_arn = aws_iam_policy.rancher_worker.arn
 }
