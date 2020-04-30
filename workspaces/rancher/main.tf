@@ -96,7 +96,7 @@ resource "aws_iam_role" "rancher_control_plane" {
   name = "rancher-control-plane"
   tags = local.tags
 
-  assume_role_policy = data.aws_iam_policy_document.ec2_trust
+  assume_role_policy = data.aws_iam_policy_document.ec2_trust.json
 }
 
 resource "aws_iam_role_policy_attachment" "rancher_control_plane" {
@@ -136,7 +136,7 @@ resource "aws_iam_role" "rancher_worker" {
   name = "rancher-worker"
   tags = local.tags
 
-  assume_role_policy = data.aws_iam_policy_document.ec2_trust
+  assume_role_policy = data.aws_iam_policy_document.ec2_trust.json
 }
 
 resource "aws_iam_role_policy_attachment" "rancher_worker" {
