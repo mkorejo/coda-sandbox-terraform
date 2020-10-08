@@ -5,7 +5,7 @@ variable "aws_account_id" {
 variable "k8s_version" {
   type = string
   description = "Kubernetes version"
-  default = "1.15"
+  default = "1.17"
 }
 
 variable "node_group_instance_types" {
