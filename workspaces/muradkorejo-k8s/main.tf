@@ -51,6 +51,16 @@ resource "helm_release" "fluxcd_helm_operator" {
   chart      = "helm-operator"
   version    = "1.2.0"
   namespace  = local.fluxcd_namespace
+
+  set {
+    name  = "git.ssh.secretName"
+    value = "flux-git-deploy"
+  }
+
+  set {
+    name  = "helm.versions"
+    value = "v3"
+  }
 }
 
 resource "helm_release" "argocd_infra_apps" {
