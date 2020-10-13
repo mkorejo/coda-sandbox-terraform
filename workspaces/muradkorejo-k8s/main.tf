@@ -13,7 +13,7 @@ resource "helm_release" "argocd" {
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   version    = "2.9.2"
-  namespace  = "argocd"
+  namespace  = local.argocd_namespace
 }
 
 resource "helm_release" "fluxcd" {
@@ -22,7 +22,7 @@ resource "helm_release" "fluxcd" {
   repository = "https://charts.fluxcd.io"
   chart      = "flux"
   version    = "1.5.0"
-  namespace  = "fluxcd"
+  namespace  = local.fluxcd_namespace
 
   set {
     name  = "git.url"
@@ -47,10 +47,10 @@ resource "helm_release" "crds" {
 resource "helm_release" "fluxcd_helm_operator" {
   name       = "fluxcd_helm_operator"
   depends_on = [ helm_release.crds ]
-  repository = "https://argoproj.github.io/argo-helm"
-  chart      = "argo-cd"
-  version    = "2.9.2"
-  namespace  = "argocd"
+  repository = "https://charts.fluxcd.io"
+  chart      = "helm-operator"
+  version    = "1.2.0"
+  namespace  = local.fluxcd_namespace
 }
 
 resource "helm_release" "argocd_infra_apps" {
@@ -58,7 +58,7 @@ resource "helm_release" "argocd_infra_apps" {
   depends_on = [ helm_release.crds ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "infra-apps"
-  namespace  = "argocd"
+  namespace  = local.argocd_namespace
 
   # https://github.com/vmware-tanzu/velero-plugin-for-aws/issues/17
   set {
@@ -121,7 +121,7 @@ resource "helm_release" "argocd_infra_apps" {
 resource "null_resource" "delay" {
   provisioner "local-exec" { command = "sleep 30" }
 
-  triggers = { "argocd_infra_apps" = "${helm_release.argocd_infra_apps.id}" }
+  triggers = { "argocd_infra_apps" = helm_release.argocd_infra_apps.id }
 }
 
 resource "helm_release" "route53_issuer" {
