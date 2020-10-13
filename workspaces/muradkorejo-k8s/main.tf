@@ -1,30 +1,61 @@
+# Install GitOps operators
 resource "kubernetes_namespace" "argocd" {
-  metadata {
-    name = "argocd"
-  }
+  metadata { name = local.argocd_namespace }
+}
+
+resource "kubernetes_namespace" "fluxcd" {
+  metadata { name = local.fluxcd_namespace }
 }
 
 resource "helm_release" "argocd" {
   name       = "argocd"
+  depends_on = [ kubernetes_namespace.argocd ]
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
-  version    = "2.2.2"
+  version    = "2.9.2"
   namespace  = "argocd"
-
-  depends_on = [
-    kubernetes_namespace.argocd
-  ]
 }
 
+resource "helm_release" "fluxcd" {
+  name       = "argocd"
+  depends_on = [ kubernetes_namespace.fluxcd ]
+  repository = "https://charts.fluxcd.io"
+  chart      = "flux"
+  version    = "1.5.0"
+  namespace  = "fluxcd"
+
+  set {
+    name  = "git.url"
+    value = "git@github.com:mkorejo/flux-kustomize-example.git"
+  }
+
+  set {
+    name  = "git.url"
+    value = "git@github.com:mkorejo/flux-kustomize-example.git"
+  }
+}
+
+# Install additional CRDs
 resource "helm_release" "crds" {
   name       = "crds"
+  depends_on = [ helm_release.argocd, helm_release.fluxcd ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "crds"
   namespace  = "kube-system"
 }
 
-resource "helm_release" "infra_apps" {
+resource "helm_release" "fluxcd_helm_operator" {
+  name       = "fluxcd_helm_operator"
+  depends_on = [ helm_release.crds ]
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd"
+  version    = "2.9.2"
+  namespace  = "argocd"
+}
+
+resource "helm_release" "argocd_infra_apps" {
   name       = "infra-apps"
+  depends_on = [ helm_release.crds ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "infra-apps"
   namespace  = "argocd"
@@ -84,26 +115,18 @@ resource "helm_release" "infra_apps" {
     }
     EOT
   }
-
-  depends_on = [
-    helm_release.argocd,
-    helm_release.crds
-  ]
 }
 
 # https://github.com/hashicorp/terraform/issues/17726#issuecomment-377357866
 resource "null_resource" "delay" {
-  provisioner "local-exec" {
-    command = "sleep 30"
-  }
+  provisioner "local-exec" { command = "sleep 30" }
 
-  triggers = {
-    "infra_apps" = "${helm_release.infra_apps.id}"
-  }
+  triggers = { "argocd_infra_apps" = "${helm_release.argocd_infra_apps.id}" }
 }
 
 resource "helm_release" "route53_issuer" {
   name       = "cert-manager-issuer"
+  depends_on = [ helm_release.argocd_infra_apps, null_resource.delay ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "cert-manager-issuer"
   namespace  = "cert-manager"
@@ -122,9 +145,4 @@ resource "helm_release" "route53_issuer" {
     name  = "route53.iam_sa.role"
     value = data.aws_iam_role.eks_external_dns_role.arn
   }
-
-  depends_on = [
-    helm_release.infra_apps,
-    null_resource.delay
-  ]
 }
