@@ -17,7 +17,7 @@ resource "helm_release" "argocd" {
 }
 
 resource "helm_release" "fluxcd" {
-  name       = "argocd"
+  name       = "fluxcd"
   depends_on = [ kubernetes_namespace.fluxcd ]
   repository = "https://charts.fluxcd.io"
   chart      = "flux"
@@ -45,7 +45,7 @@ resource "helm_release" "crds" {
 }
 
 resource "helm_release" "fluxcd_helm_operator" {
-  name       = "fluxcd_helm_operator"
+  name       = "fluxcd-helm-operator"
   depends_on = [ helm_release.crds ]
   repository = "https://charts.fluxcd.io"
   chart      = "helm-operator"
