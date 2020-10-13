@@ -54,7 +54,7 @@ resource "helm_release" "fluxcd_helm_operator" {
 
   set {
     name  = "git.ssh.secretName"
-    value = "flux-git-deploy"
+    value = "fluxcd-git-deploy"
   }
 
   set {
