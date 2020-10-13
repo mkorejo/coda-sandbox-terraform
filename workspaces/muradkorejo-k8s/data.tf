@@ -1,6 +1,6 @@
 # Specify the name of our EKS cluster, our KMS key, our Route53 Hosted Zone, etc.
 data "aws_acm_certificate" "eks_elb_cert" {
-  domain   = "*.coda.run"
+  domain   = "*.devops.coda.run"
   statuses = ["ISSUED"]
 }
 
@@ -21,5 +21,5 @@ data "aws_kms_alias" "eks_kms_key" {
 }
 
 data "aws_route53_zone" "hosted_zone" {
-  name = "coda.run."
+  name = "devops.coda.run."
 }
