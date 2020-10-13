@@ -26,7 +26,7 @@ resource "helm_release" "fluxcd" {
 
   set {
     name  = "git.url"
-    value = "git@github.com:mkorejo/flux-kustomize-example.git"
+    value = "git@github.com:mkorejo/flux-helm-sandbox.git"
   }
 
   set {
