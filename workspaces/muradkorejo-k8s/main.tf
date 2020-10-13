@@ -1,4 +1,3 @@
-# Install GitOps operators
 resource "kubernetes_namespace" "argocd" {
   metadata { name = local.argocd_namespace }
 }
@@ -7,8 +6,9 @@ resource "kubernetes_namespace" "fluxcd" {
   metadata { name = local.fluxcd_namespace }
 }
 
+# Install GitOps operators
 resource "helm_release" "argocd" {
-  name       = "argocd"
+  name       = local.argocd_namespace
   depends_on = [ kubernetes_namespace.argocd ]
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
@@ -17,7 +17,7 @@ resource "helm_release" "argocd" {
 }
 
 resource "helm_release" "fluxcd" {
-  name       = "fluxcd"
+  name       = local.fluxcd_namespace
   depends_on = [ kubernetes_namespace.fluxcd ]
   repository = "https://charts.fluxcd.io"
   chart      = "flux"
@@ -30,8 +30,8 @@ resource "helm_release" "fluxcd" {
   }
 
   set {
-    name  = "git.url"
-    value = "git@github.com:mkorejo/flux-kustomize-example.git"
+    name  = "syncGarbageCollection.enabled"
+    value = true
   }
 }
 
