@@ -1,0 +1,1 @@
+flux_config_git_paths = ["flux/common", "flux/cluster_eks"]
