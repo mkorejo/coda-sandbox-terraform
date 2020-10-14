@@ -26,7 +26,7 @@ resource "helm_release" "fluxcd" {
 
   set {
     name  = "git.url"
-    value = "git@github.com:mkorejo/helm-operator-get-started.git"
+    value = var.flux_config_repo
   }
 
   set {
@@ -41,6 +41,7 @@ resource "helm_release" "crds" {
   depends_on = [ helm_release.argocd, helm_release.fluxcd ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "crds"
+  version    = "0.2.0"
   namespace  = "kube-system"
 }
 
