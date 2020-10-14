@@ -31,7 +31,7 @@ resource "helm_release" "fluxcd" {
 
   set {
     name  = "git.path"
-    value = join("\\,", var.flux_config_git_path)
+    value = join("\\,", var.flux_config_git_paths)
   }
 
   set {
