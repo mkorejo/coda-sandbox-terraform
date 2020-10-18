@@ -1,1 +1,1 @@
-flux_config_git_paths = ["flux/adm", "flux/cluster_eks"]
+flux_config_git_paths = ["flux/cluster_eks", "flux/common"]

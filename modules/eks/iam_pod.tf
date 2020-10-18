@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "service_account_assume_role_policy" {
   }
 }
 
-# https://github.com/terraform-providers/terraform-provider-aws/issues/10104
+# https://github.com/terraform-providers/terraform-provider-aws/issues/10104#issuecomment-633130751
 locals {
   eks-oidc-thumbprint = "9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
 }
