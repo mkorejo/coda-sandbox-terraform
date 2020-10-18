@@ -46,7 +46,7 @@ resource "helm_release" "crds" {
   depends_on = [ helm_release.argocd, helm_release.fluxcd ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "crds"
-  version    = "0.2.0"
+  version    = "0.3.0"
   namespace  = "kube-system"
 }
 
