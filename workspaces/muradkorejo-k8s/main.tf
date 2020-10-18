@@ -62,11 +62,6 @@ resource "helm_release" "fluxcd_helm_operator" {
     name  = "git.ssh.secretName"
     value = "fluxcd-git-deploy"
   }
-
-  set {
-    name  = "helm.versions"
-    value = "v3"
-  }
 }
 
 resource "helm_release" "argocd_infra_apps" {
@@ -74,6 +69,7 @@ resource "helm_release" "argocd_infra_apps" {
   depends_on = [ helm_release.crds ]
   repository = "https://mkorejo.github.io/helm_charts"
   chart      = "infra-apps"
+  version    = "0.1.3"
   namespace  = local.argocd_namespace
 
   # https://github.com/vmware-tanzu/velero-plugin-for-aws/issues/17
@@ -89,7 +85,7 @@ resource "helm_release" "argocd_infra_apps" {
 
   set {
     name  = "externalDNS.spec.domainFilters"
-    value = "{coda.run}"
+    value = "{devops.coda.run}"
   }
 
   set {
