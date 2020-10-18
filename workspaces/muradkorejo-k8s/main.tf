@@ -62,6 +62,16 @@ resource "helm_release" "fluxcd_helm_operator" {
     name  = "git.ssh.secretName"
     value = "fluxcd-git-deploy"
   }
+
+  set {
+    name  = "tillerNamespace"
+    value = local.fluxcd_namespace
+  }
+
+  set {
+    name  = "tillerSidecar.enabled"
+    value = true
+  }
 }
 
 resource "helm_release" "argocd_infra_apps" {
@@ -145,7 +155,7 @@ resource "helm_release" "route53_issuer" {
 
   set {
     name  = "route53.email"
-    value = "murad.korejo@coda.global"
+    value = "mkorejo@presidio.com"
   }
 
   set {
