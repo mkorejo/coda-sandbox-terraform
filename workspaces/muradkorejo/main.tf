@@ -51,13 +51,13 @@ resource "aws_db_subnet_group" "default" {
 resource "aws_db_instance" "default" {
   allocated_storage      = 20
   copy_tags_to_snapshot  = true
+  db_subnet_group_name   = aws_db_subnet_group.default.id
   engine                 = "postgres"
   engine_version         = "12"
   identifier             = join("-", [local.prefix, "psql"])
   instance_class         = "db.t2.small"
   username               = "foo"
   password               = "foobarbaz"
-  parameter_group_name   = aws_db_subnet_group.default.id
   storage_type           = "gp2"
   tags                   = local.tags
   vpc_security_group_ids = null
