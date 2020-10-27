@@ -42,12 +42,6 @@ module "sandbox_eks" {
   node_group_ssh_key       = "muradkorejo"
 }
 
-resource "aws_db_subnet_group" "default" {
-  name       = local.prefix
-  subnet_ids = module.sandbox_vpc.private_subnets
-  tags       = local.tags
-}
-
 resource "aws_security_group" "allow_postgres" {
   name        = join("-", [local.prefix, "allow-psql"])
   description = "Security group for RDS PostgreSQL instances"
@@ -62,18 +56,24 @@ resource "aws_security_group" "allow_postgres" {
   }
 }
 
-resource "aws_db_instance" "default" {
+resource "aws_db_subnet_group" "sandbox_rds" {
+  name       = local.prefix
+  subnet_ids = module.sandbox_vpc.private_subnets
+  tags       = local.tags
+}
+
+resource "aws_db_instance" "sandbox_rds" {
   allocated_storage         = 20
   copy_tags_to_snapshot     = true
-  db_subnet_group_name      = aws_db_subnet_group.default.id
+  db_subnet_group_name      = aws_db_subnet_group.sandbox_rds.id
   engine                    = "postgres"
   engine_version            = "12"
   final_snapshot_identifier = local.prefix
   identifier                = join("-", [local.prefix, "psql"])
   instance_class            = "db.t2.small"
-  username                  = "foo"
-  password                  = "foobarbaz"
-  skip_final_snapshot       = true
+  username                  = var.rds_master_username
+  password                  = var.rds_master_password
+  skip_final_snapshot       = var.rds_skip_final_snapshot
   storage_type              = "gp2"
   tags                      = local.tags
   vpc_security_group_ids    = [ aws_security_group.allow_postgres.id ]
