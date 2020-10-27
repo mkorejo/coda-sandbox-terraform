@@ -52,7 +52,7 @@ resource "aws_security_group" "allow_postgres" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = concat(module.sandbox_vpc.private_subnets, module.sandbox_vpc.public_subnets)
+    cidr_blocks = concat(module.sandbox_vpc.private_subnets_cidr_blocks, module.sandbox_vpc.public_subnets_cidr_blocks)
   }
 }
 
@@ -78,3 +78,4 @@ resource "aws_db_instance" "sandbox_rds" {
   tags                      = local.tags
   vpc_security_group_ids    = [ aws_security_group.allow_postgres.id ]
 }
+
