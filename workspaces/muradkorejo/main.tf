@@ -48,17 +48,33 @@ resource "aws_db_subnet_group" "default" {
   tags       = local.tags
 }
 
+resource "aws_security_group" "allow_postgres" {
+  name        = join("-", [local.prefix, "allow-psql"])
+  description = "Security group for RDS PostgreSQL instances"
+  vpc_id      = module.sandbox_vpc.vpc_id
+
+  ingress {
+    description = "TCP/5432 for database connections"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = module.sandbox_vpc.private_subnets_cidr_blocks
+  }
+}
+
 resource "aws_db_instance" "default" {
-  allocated_storage      = 20
-  copy_tags_to_snapshot  = true
-  db_subnet_group_name   = aws_db_subnet_group.default.id
-  engine                 = "postgres"
-  engine_version         = "12"
-  identifier             = join("-", [local.prefix, "psql"])
-  instance_class         = "db.t2.small"
-  username               = "foo"
-  password               = "foobarbaz"
-  storage_type           = "gp2"
-  tags                   = local.tags
-  vpc_security_group_ids = null
+  allocated_storage         = 20
+  copy_tags_to_snapshot     = true
+  db_subnet_group_name      = aws_db_subnet_group.default.id
+  engine                    = "postgres"
+  engine_version            = "12"
+  final_snapshot_identifier = local.prefix
+  identifier                = join("-", [local.prefix, "psql"])
+  instance_class            = "db.t2.small"
+  username                  = "foo"
+  password                  = "foobarbaz"
+  skip_final_snapshot       = true
+  storage_type              = "gp2"
+  tags                      = local.tags
+  vpc_security_group_ids    = [ aws_security_group.allow_postgres.id ]
 }
