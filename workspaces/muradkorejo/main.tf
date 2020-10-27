@@ -62,27 +62,3 @@ resource "aws_db_instance" "default" {
   tags                   = local.tags
   vpc_security_group_ids = null
 }
-
-resource "postgresql_database" "burpenterprise" {
-  name = "burpenterprise"
-}
-
-resource "postgresql_role" "burp_enterprise" {
-  name     = "burp_enterprise"
-  login    = true
-  password = "burp"
-}
-
-resource "postgresql_role" "burp_agent" {
-  name     = "burp_agent"
-  login    = true
-  password = "burp"
-}
-
-resource "postgresql_grant" "burpenterprise_to_burp_enterprise" {
-  database    = "burpenterprise"
-  role        = "burp_enterprise"
-  schema      = "public"
-  object_type = "database"
-  privileges  = ["SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE"]
-}
