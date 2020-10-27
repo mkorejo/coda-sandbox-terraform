@@ -41,3 +41,48 @@ module "sandbox_eks" {
   node_group_scale_min     = "1"
   node_group_ssh_key       = "muradkorejo"
 }
+
+resource "aws_db_subnet_group" "default" {
+  name       = local.prefix
+  subnet_ids = module.sandbox_vpc.private_subnets
+  tags       = local.tags
+}
+
+resource "aws_db_instance" "default" {
+  allocated_storage      = 20
+  copy_tags_to_snapshot  = true
+  engine                 = "postgres"
+  engine_version         = "12"
+  identifier             = join("-", [local.prefix, "psql"])
+  instance_class         = "db.t2.small"
+  username               = "foo"
+  password               = "foobarbaz"
+  parameter_group_name   = aws_db_subnet_group.default.id
+  storage_type           = "gp2"
+  tags                   = local.tags
+  vpc_security_group_ids = null
+}
+
+resource "postgresql_database" "burpenterprise" {
+  name = "burpenterprise"
+}
+
+resource "postgresql_role" "burp_enterprise" {
+  name     = "burp_enterprise"
+  login    = true
+  password = "burp"
+}
+
+resource "postgresql_role" "burp_agent" {
+  name     = "burp_agent"
+  login    = true
+  password = "burp"
+}
+
+resource "postgresql_grant" "burpenterprise_to_burp_enterprise" {
+  database    = "burpenterprise"
+  role        = "burp_enterprise"
+  schema      = "public"
+  object_type = "database"
+  privileges  = ["SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE"]
+}
