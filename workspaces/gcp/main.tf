@@ -31,9 +31,6 @@ module "vpc" {
         range_name    = join("-", [local.primary_subnet, "secondary-01"])
         ip_cidr_range = "10.10.11.0/24"
       },
-    ]
-
-    (local.primary_subnet) = [
       {
         range_name    = join("-", [local.primary_subnet, "secondary-02"])
         ip_cidr_range = "10.10.12.0/24"
@@ -45,9 +42,6 @@ module "vpc" {
         range_name    = join("-", [local.secondary_subnet, "secondary-01"])
         ip_cidr_range = "10.10.21.0/24"
       },
-    ]
-
-    (local.secondary_subnet) = [
       {
         range_name    = join("-", [local.secondary_subnet, "secondary-02"])
         ip_cidr_range = "10.10.22.0/24"
