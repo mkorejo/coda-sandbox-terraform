@@ -9,7 +9,7 @@ module "vpc" {
   subnets = [
     {
       description           = "Primary subnet"
-      subnet_name           = join("-", [local.prefix, "subnet-01"])
+      subnet_name           = local.primary_subnet
       subnet_ip             = "10.10.10.0/24"
       subnet_region         = local.primary_region
     # subnet_flow_logs      = "true"
@@ -17,7 +17,7 @@ module "vpc" {
     },
     {
       description           = "Secondary subnet"
-      subnet_name           = join("-", [local.prefix, "subnet-02"])
+      subnet_name           = local.secondary_subnet
       subnet_ip             = "10.10.20.0/24"
       subnet_region         = local.secondary_region
     # subnet_flow_logs      = "true"
@@ -26,14 +26,14 @@ module "vpc" {
   ]
 
   secondary_ranges = {
-    subnet-01 = [
+    local.primary_subnet = [
       {
         range_name    = "subnet-01-secondary-01"
         ip_cidr_range = "192.168.64.0/24"
       },
     ]
 
-    subnet-02 = [
+    local.secondary_subnet = [
       {
         range_name    = "subnet-01-secondary-01"
         ip_cidr_range = "192.168.64.0/24"
