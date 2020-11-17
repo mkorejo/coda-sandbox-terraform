@@ -44,7 +44,7 @@ resource "helm_release" "fluxcd" {
 resource "helm_release" "crds" {
   name       = "crds"
   depends_on = [ helm_release.argocd, helm_release.fluxcd ]
-  repository = "https://mkorejo.github.io/helm_charts"
+  repository = "https://mkorejo.github.io/helm-charts"
   chart      = "crds"
   version    = "0.3.0"
   namespace  = "kube-system"
@@ -77,7 +77,7 @@ resource "helm_release" "fluxcd_helm_operator" {
 resource "helm_release" "argocd_infra_apps" {
   name       = "infra-apps"
   depends_on = [ helm_release.crds ]
-  repository = "https://mkorejo.github.io/helm_charts"
+  repository = "https://mkorejo.github.io/helm-charts"
   chart      = "infra-apps"
   version    = "0.1.3"
   namespace  = local.argocd_namespace
@@ -149,7 +149,7 @@ resource "null_resource" "delay" {
 resource "helm_release" "route53_issuer" {
   name       = "cert-manager-issuer"
   depends_on = [ helm_release.argocd_infra_apps, null_resource.delay ]
-  repository = "https://mkorejo.github.io/helm_charts"
+  repository = "https://mkorejo.github.io/helm-charts"
   chart      = "cert-manager-issuer"
   namespace  = "cert-manager"
 

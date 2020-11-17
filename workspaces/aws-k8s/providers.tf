@@ -1,6 +1,6 @@
 provider "aws" {
   version = "2.56.0"
-  region  = "us-east-1"
+  region  = local.region
 }
 
 # https://www.terraform.io/docs/providers/aws/d/eks_cluster_auth.html
