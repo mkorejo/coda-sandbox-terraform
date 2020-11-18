@@ -75,7 +75,7 @@ EOF
 
 resource "aws_iam_role" "rancher_control_plane" {
   name = "rancher-control-plane"
-  tags = local.tags
+  tags = var.tags
 
   assume_role_policy = data.aws_iam_policy_document.ec2_trust.json
 }

@@ -28,7 +28,7 @@ EOF
 
 resource "aws_iam_role" "rancher_worker" {
   name = "rancher-worker"
-  tags = local.tags
+  tags = var.tags
 
   assume_role_policy = data.aws_iam_policy_document.ec2_trust.json
 }

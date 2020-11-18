@@ -1,3 +1,7 @@
+#########################
+########## VPC ##########
+#########################
+
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/2.32.0
 module "sandbox_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -26,7 +30,12 @@ module "sandbox_vpc" {
   enable_s3_endpoint   = true
 }
 
+#########################
+########## EKS ##########
+#########################
+
 module "sandbox_eks" {
+  count  = 0
   source = "../../modules/eks"
 
   prefix = local.prefix
@@ -42,40 +51,18 @@ module "sandbox_eks" {
   node_group_ssh_key       = "muradkorejo"
 }
 
-resource "aws_security_group" "allow_postgres" {
-  name        = join("-", [local.prefix, "allow-psql"])
-  description = "Security group for RDS PostgreSQL instances"
-  vpc_id      = module.sandbox_vpc.vpc_id
+#########################
+###### PostgreSQL #######
+#########################
 
-  ingress {
-    description = "TCP/5432 for database connections"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = concat(module.sandbox_vpc.private_subnets_cidr_blocks, module.sandbox_vpc.public_subnets_cidr_blocks)
-  }
+
+
+#########################
+###### Rancher IAM ######
+#########################
+
+module "rancher_iam" {
+  source = "../../modules/terraform-aws-rancher-iam"
+
+  tags = local.tags
 }
-
-resource "aws_db_subnet_group" "sandbox_rds" {
-  name       = local.prefix
-  subnet_ids = module.sandbox_vpc.private_subnets
-  tags       = local.tags
-}
-
-resource "aws_db_instance" "sandbox_rds" {
-  allocated_storage         = 20
-  copy_tags_to_snapshot     = true
-  db_subnet_group_name      = aws_db_subnet_group.sandbox_rds.id
-  engine                    = "postgres"
-  engine_version            = "12"
-  final_snapshot_identifier = local.prefix
-  identifier                = join("-", [local.prefix, "psql"])
-  instance_class            = "db.t2.small"
-  username                  = var.rds_master_username
-  password                  = var.rds_master_password
-  skip_final_snapshot       = var.rds_skip_final_snapshot
-  storage_type              = "gp2"
-  tags                      = local.tags
-  vpc_security_group_ids    = [ aws_security_group.allow_postgres.id ]
-}
-

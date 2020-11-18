@@ -1,8 +1,12 @@
+/*
+1. minikube start --addons ingress --addons ingress-dns --addons metrics-server --memory 6g
+2. terraform login
+3. terraform apply -auto-approve
+*/
+
 #########################
 ######### Setup #########
 #########################
-
-# minikube start --addons dashboard --addons eks --addons ingress --addons ingress-dns --addons metrics-server
 
 provider "helm" {
   kubernetes { config_context = "minikube" }
