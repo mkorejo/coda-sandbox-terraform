@@ -39,8 +39,10 @@ resource "helm_release" "crds" {
 resource "kubernetes_namespace" "namespaces" {
   for_each = toset([
     "cattle-system",
-    "cert-manager"
+    "cert-manager",
+    "vpa"
   ])
+
   metadata { name = each.value }
 }
 
@@ -65,4 +67,11 @@ resource "helm_release" "rancher" {
     name  = "hostname"
     value = "rancher.minikube"
   }
+}
+
+resource "helm_release" "vpa" {
+  name       = "vpa"
+  repository = "https://charts.fairwinds.com/stable"
+  chart      = "vpa"
+  namespace  = "vpa"
 }
