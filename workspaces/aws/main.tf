@@ -102,8 +102,11 @@ resource "aws_instance" "rke_nodes" {
     "rke-worker-2"
   ])
 
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.small"
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.small"
+  key_name               = "muradkorejo"
+  tags                   = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_web.id]
 }
 
 #########################
