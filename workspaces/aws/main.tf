@@ -31,6 +31,82 @@ module "sandbox_vpc" {
 }
 
 #########################
+#### Security Groups ####
+#########################
+
+resource "aws_security_group" "allow_rdp" {
+  name        = join("-", [local.prefix, "allow-rdp"])
+  description = "Allow RDP"
+  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-rdp"])})
+  vpc_id      = module.sandbox_vpc.vpc_id
+}
+
+resource "aws_security_group" "allow_ssh" {
+  name        = join("-", [local.prefix, "allow-ssh"])
+  description = "Allow SSH"
+  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-ssh"])})
+  vpc_id      = module.sandbox_vpc.vpc_id
+}
+
+resource "aws_security_group" "allow_web" {
+  name        = join("-", [local.prefix, "allow-web"])
+  description = "Allow HTTP/HTTPS"
+  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-web"])})
+  vpc_id      = module.sandbox_vpc.vpc_id
+}
+
+resource "aws_security_group_rule" "allow_rdp" {
+  security_group_id = aws_security_group.allow_rdp.id
+  description       = "Inbound on TCP/3389"
+  type              = "ingress"
+  from_port         = 3389
+  to_port           = 3389
+  protocol          = "tcp"
+  cidr_blocks       = [local.my_ip]
+}
+
+resource "aws_security_group_rule" "allow_ssh" {
+  security_group_id = aws_security_group.allow_ssh.id
+  description       = "Inbound on TCP/22"
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = [local.my_ip]
+}
+
+resource "aws_security_group_rule" "allow_web" {
+  for_each = toset([
+    "80",
+    "443",
+    "6443"
+  ])
+
+  security_group_id = aws_security_group.allow_web.id
+  description       = join("", ["Inbound on TCP/", each.value])
+  type              = "ingress"
+  from_port         = each.value
+  to_port           = each.value
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+#########################
+########## EC2 ##########
+#########################
+
+resource "aws_instance" "rke_nodes" {
+  for_each = toset([
+    "rke-control-plane-1",
+    "rke-worker-1",
+    "rke-worker-2"
+  ])
+
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.small"
+}
+
+#########################
 ########## EKS ##########
 #########################
 
