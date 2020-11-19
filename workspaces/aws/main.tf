@@ -102,13 +102,14 @@ resource "aws_instance" "rke_nodes" {
     "rke-worker-2"
   ])
 
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.small"
-  key_name               = "muradkorejo"
-  subnet_id              = module.sandbox_vpc.private_subnets[0]
-  tags                   = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
-  volume_tags            = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_web.id]
+  ami                         = data.aws_ami.ubuntu.id
+  associate_public_ip_address = true
+  instance_type               = "t3.small"
+  key_name                    = "muradkorejo"
+  subnet_id                   = module.sandbox_vpc.private_subnets[0]
+  tags                        = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
+  volume_tags                 = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_web.id]
 }
 
 #########################

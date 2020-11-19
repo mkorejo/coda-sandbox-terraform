@@ -1,3 +1,4 @@
+# https://registry.terraform.io/modules/terraform-google-modules/network/google/latest
 module "vpc" {
   source  = "terraform-google-modules/network/google"
   version = "~> 2.5"
@@ -59,3 +60,5 @@ module "vpc" {
     }
   ]
 }
+
+# https://registry.terraform.io/modules/jetstack/gke-cluster/google/latest
