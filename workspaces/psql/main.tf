@@ -2,7 +2,7 @@ terraform {
   required_providers {
     postgresql = {
       source   = "terraform-providers/postgresql"
-      host     = muradkorejo-psql.cuukwis7t1js.us-east-1.rds.amazonaws.com
+      host     = "muradkorejo-psql.cuukwis7t1js.us-east-1.rds.amazonaws.com"
       username = "foo"
       password = "foobarbaz"
     }
