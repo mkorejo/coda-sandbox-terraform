@@ -34,6 +34,20 @@ module "sandbox_vpc" {
 #### Security Groups ####
 #########################
 
+resource "aws_security_group" "allow_all_outgoing" {
+  name        = join("-", [local.prefix, "allow-all-outgoing"])
+  description = "Allow RDP"
+  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-all-outgoing"])})
+  vpc_id      = module.sandbox_vpc.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "allow_rdp" {
   name        = join("-", [local.prefix, "allow-rdp"])
   description = "Allow RDP"
@@ -108,7 +122,11 @@ resource "aws_instance" "rke_nodes" {
   subnet_id                   = module.sandbox_vpc.public_subnets[0]
   tags                        = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
   volume_tags                 = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
-  vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_web.id]
+  vpc_security_group_ids      = [
+    aws_security_group.allow_all_outgoing.id,
+    aws_security_group.allow_ssh.id,
+    aws_security_group.allow_web.id
+  ]
 }
 
 #########################
