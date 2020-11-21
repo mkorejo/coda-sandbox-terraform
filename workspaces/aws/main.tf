@@ -36,7 +36,7 @@ module "sandbox_vpc" {
 
 resource "aws_security_group" "allow_all_outgoing" {
   name        = join("-", [local.prefix, "allow-all-outgoing"])
-  description = "Allow RDP"
+  description = "Allow all outgoing communication"
   tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-all-outgoing"])})
   vpc_id      = module.sandbox_vpc.vpc_id
 
@@ -67,6 +67,20 @@ resource "aws_security_group" "allow_web" {
   description = "Allow HTTP/HTTPS"
   tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-web"])})
   vpc_id      = module.sandbox_vpc.vpc_id
+}
+
+resource "aws_security_group" "rke_nodes" {
+  name        = join("-", [local.prefix, "rke-nodes"])
+  description = "Allow all inbound communication from RKE nodes"
+  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "rke-nodes"])})
+  vpc_id      = module.sandbox_vpc.vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    self        = true
+  }
 }
 
 resource "aws_security_group_rule" "allow_rdp" {
@@ -126,6 +140,7 @@ resource "aws_instance" "rke_nodes" {
     aws_security_group.allow_all_outgoing.id,
     aws_security_group.allow_ssh.id,
     aws_security_group.allow_web.id
+    aws_security_group.rke_nodes.id
   ]
 }
 
