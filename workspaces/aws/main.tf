@@ -139,7 +139,7 @@ resource "aws_instance" "rke_nodes" {
   vpc_security_group_ids      = [
     aws_security_group.allow_all_outgoing.id,
     aws_security_group.allow_ssh.id,
-    aws_security_group.allow_web.id
+    aws_security_group.allow_web.id,
     aws_security_group.rke_nodes.id
   ]
 }
