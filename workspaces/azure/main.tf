@@ -225,6 +225,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
       subnet_id = azurerm_subnet.internal.id
 
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb.id]
+
+      public_ip_address {
+        name = "default"
+      }
     }
 
     network_security_group_id = azurerm_network_security_group.nginx_plus.id
@@ -239,10 +243,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
     name      = local.nginx_plus_sku
     product   = local.nginx_plus_offer
     publisher = local.nginx_plus_publisher
-  }
-
-  public_ip_address {
-    name = "default"
   }
 
   source_image_reference {
