@@ -77,7 +77,7 @@ resource "azurerm_network_security_group" "nginx_plus" {
 
   security_rule {
     name                       = "allow-https"
-    priority                   = 100
+    priority                   = 200
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -89,7 +89,7 @@ resource "azurerm_network_security_group" "nginx_plus" {
 
   security_rule {
     name                       = "allow-ssh"
-    priority                   = 100
+    priority                   = 300
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
