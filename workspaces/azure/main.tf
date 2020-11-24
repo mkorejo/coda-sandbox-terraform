@@ -67,6 +67,7 @@ resource "azurerm_lb" "lb" {
   name                = join("-", [local.prefix, "lb"])
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
+  sku                 = "Standard"
 
   frontend_ip_configuration {
     name                 = join("-", [local.prefix, "lb-frontend-ip-config"])
