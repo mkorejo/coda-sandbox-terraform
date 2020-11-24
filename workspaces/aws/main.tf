@@ -142,6 +142,10 @@ resource "aws_instance" "rke_nodes" {
     aws_security_group.allow_web.id,
     aws_security_group.rke_nodes.id
   ]
+
+  root_block_device {
+    volume_size = 50
+  }
 }
 
 #########################
