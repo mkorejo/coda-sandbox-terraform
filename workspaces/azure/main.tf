@@ -86,6 +86,7 @@ resource "azurerm_lb_probe" "lb" {
   loadbalancer_id     = azurerm_lb.lb.id
   port                = 80
   protocol            = "Http"
+  request_path        = "/"
 }
 
 #########################
