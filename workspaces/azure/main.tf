@@ -53,6 +53,18 @@ resource "azurerm_subnet" "internal" {
 }
 
 #########################
+#### Storage Account ####
+#########################
+
+resource "azurerm_storage_account" "main" {
+  name                     = local.prefix
+  resource_group_name      = azurerm_resource_group.main.name
+  location                 = azurerm_resource_group.main.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+}
+
+#########################
 ##### Load Balancer #####
 #########################
 
@@ -132,6 +144,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
 
   automatic_instance_repair {
     enabled = true
+  }
+
+  boot_diagnostics {
+    storage_account_uri = azurerm_storage_account.main.primary_blob_endpoint
   }
 
   # Instances can change via autoscaling outside of Terraform, so let's ignore any changes to number of instances.
