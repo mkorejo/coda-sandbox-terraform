@@ -248,7 +248,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
     version   = "latest"
   }
 
-  depends_on = [azurerm_lb_backend_address_pool.lb]
+  depends_on = [
+    azurerm_lb_backend_address_pool.lb,
+    azurerm_lb_probe.lb
+  ]
 }
 
 resource "azurerm_monitor_autoscale_setting" "nginx_plus" {
