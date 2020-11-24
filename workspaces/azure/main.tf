@@ -241,6 +241,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
     publisher = local.nginx_plus_publisher
   }
 
+  public_ip_address {
+    name = "default"
+  }
+
   source_image_reference {
     offer     = local.nginx_plus_offer
     publisher = local.nginx_plus_publisher
