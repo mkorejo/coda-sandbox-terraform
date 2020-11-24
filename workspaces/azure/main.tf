@@ -57,7 +57,7 @@ resource "azurerm_subnet" "internal" {
 #########################
 
 resource "azurerm_storage_account" "main" {
-  name                     = local.prefix
+  name                     = "default"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
