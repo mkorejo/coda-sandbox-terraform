@@ -6,6 +6,8 @@ locals {
   location = "Central US"
   prefix   = "mkorejo-sandbox"
 
+  my_ip = "72.204.149.59/32"
+
   nginx_plus_offer     = "nginx-plus-v1"
   nginx_plus_publisher = "nginxinc"
   nginx_plus_sku       = "nginx-plus-ub1804"
@@ -50,6 +52,52 @@ resource "azurerm_subnet" "internal" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.2.0/24"]
+}
+
+#########################
+#### Security Groups ####
+#########################
+
+resource "azurerm_network_security_group" "nginx_plus" {
+  name                = join("-", [local.prefix, "nginx-plus"])
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+
+  security_rule {
+    name                       = "allow-http"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "80"
+    destination_port_range     = "80"
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "VirtualNetwork"
+  }
+
+  security_rule {
+    name                       = "allow-https"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "443"
+    destination_port_range     = "443"
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "VirtualNetwork"
+  }
+
+  security_rule {
+    name                       = "allow-ssh"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "22"
+    destination_port_range     = "22"
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "VirtualNetwork"
+  }
 }
 
 #########################
@@ -166,6 +214,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
 
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.lb.id]
     }
+
+    network_security_group_id = azurerm_network_security_group.nginx_plus.id
   }
 
   os_disk {
