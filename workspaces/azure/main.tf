@@ -95,7 +95,7 @@ resource "azurerm_network_security_group" "nginx_plus" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "Internet"
+    source_address_prefix      = local.my_ip
     destination_address_prefix = "VirtualNetwork"
   }
 }
