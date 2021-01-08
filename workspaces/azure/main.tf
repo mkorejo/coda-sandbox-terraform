@@ -149,6 +149,7 @@ resource "azurerm_lb_probe" "lb" {
   port                = 80
   protocol            = "Http"
   request_path        = "/"
+  interval_in_seconds = "60"
 }
 
 resource "azurerm_lb_rule" "http" {
@@ -203,7 +204,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
   }
 
   automatic_instance_repair {
-    enabled = true
+    enabled = false
   }
 
   boot_diagnostics {
