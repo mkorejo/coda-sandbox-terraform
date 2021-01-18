@@ -315,3 +315,11 @@ resource "azurerm_monitor_autoscale_setting" "nginx_plus" {
     }
   }
 }
+
+resource "azurerm_log_analytics_workspace" "nginx_plus" {
+  name                = join("-", [local.prefix, "nginx-plus"])
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  sku                 = "PerGB2018"
+  retention_in_days   = 365
+}
