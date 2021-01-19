@@ -190,7 +190,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
   name                = join("-", [local.prefix, "nginx-plus"])
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  admin_username      = "adminuser"
+# admin_username      = "adminuser"
   health_probe_id     = azurerm_lb_probe.lb.id
   instances           = 1
   sku                 = "Standard_D2_v2"
