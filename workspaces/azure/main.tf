@@ -246,12 +246,16 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
     publisher = local.nginx_plus_publisher
   }
 
+  /*
   source_image_reference {
     offer     = local.nginx_plus_offer
     publisher = local.nginx_plus_publisher
     sku       = local.nginx_plus_sku
     version   = "latest"
   }
+  */
+
+  source_image_id = "/subscriptions/576f4161-dac1-49eb-b2ab-d5cc3aaa3036/resourceGroups/mkorejo-vm-images/providers/Microsoft.Compute/galleries/nginx_plus_hunterfan/images/default/versions/0.0.1"
 
   depends_on = [
     azurerm_lb_backend_address_pool.lb,
