@@ -186,7 +186,6 @@ resource "azurerm_marketplace_agreement" "nginx_plus" {
   plan      = local.nginx_plus_sku
 }
 
-/*
 resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
   name                = join("-", [local.prefix, "nginx-plus"])
   resource_group_name = azurerm_resource_group.main.name
@@ -254,6 +253,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
     sku       = local.nginx_plus_sku
     version   = "latest"
   }
+  */
 
   source_image_id = "/subscriptions/576f4161-dac1-49eb-b2ab-d5cc3aaa3036/resourceGroups/mkorejo-vm-images/providers/Microsoft.Compute/galleries/nginx_plus_hunterfan/images/default/versions/0.0.1"
 
@@ -319,7 +319,6 @@ resource "azurerm_monitor_autoscale_setting" "nginx_plus" {
     }
   }
 }
-*/
 
 resource "azurerm_log_analytics_workspace" "nginx_plus" {
   name                = join("-", [local.prefix, "nginx-plus"])
