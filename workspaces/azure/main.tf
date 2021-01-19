@@ -319,6 +319,7 @@ resource "azurerm_monitor_autoscale_setting" "nginx_plus" {
     }
   }
 }
+*/
 
 resource "azurerm_log_analytics_workspace" "nginx_plus" {
   name                = join("-", [local.prefix, "nginx-plus"])
@@ -327,4 +328,3 @@ resource "azurerm_log_analytics_workspace" "nginx_plus" {
   sku                 = "PerGB2018"
   retention_in_days   = 365
 }
-*/
