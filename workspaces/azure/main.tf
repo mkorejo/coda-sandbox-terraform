@@ -235,11 +235,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
     network_security_group_id = azurerm_network_security_group.nginx_plus.id
   }
 
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
   plan {
     name      = local.nginx_plus_sku
     product   = local.nginx_plus_offer
@@ -247,6 +242,11 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
   }
 
   /*
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
   source_image_reference {
     offer     = local.nginx_plus_offer
     publisher = local.nginx_plus_publisher
