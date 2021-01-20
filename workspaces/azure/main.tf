@@ -198,10 +198,12 @@ resource "azurerm_linux_virtual_machine_scale_set" "nginx_plus" {
   zone_balance        = true
   zones               = [1, 2, 3]
 
+  /*
   admin_ssh_key {
     username   = "adminuser"
     public_key = file("id_rsa.pub")
   }
+  */
 
   automatic_instance_repair {
     enabled = false
