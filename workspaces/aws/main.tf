@@ -5,7 +5,7 @@
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/2.32.0
 module "sandbox_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.57.0"
+  version = "2.77.0"
 
   name = local.prefix
   cidr = "10.0.0.0/16"
