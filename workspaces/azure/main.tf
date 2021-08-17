@@ -8,9 +8,9 @@ locals {
 
   my_ip = "72.204.149.59/32"
 
-  nginx_plus_offer     = "nginx-plus-v1"
+  nginx_plus_offer     = "nginx-plus-v1-standard"
   nginx_plus_publisher = "nginxinc"
-  nginx_plus_sku       = "nginx-plus-ub1804"
+  nginx_plus_sku       = "nginx-plus-ubuntu1804"
 }
 
 provider "azurerm" {
