@@ -7,7 +7,7 @@ output "eks_external_dns_role_arn" {
 }
 
 output "eks_vault_unseal_role_arn" {
-  value = aws_iam_role.eks_vault_unseal_role.arn
+  value = aws_iam_role.eks_vault_role.arn
 }
 
 output "eks_kubeconfig_ca_data" {
