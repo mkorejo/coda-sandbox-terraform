@@ -53,7 +53,7 @@ resource "aws_iam_role" "eks_external_dns_role" {
 }
 
 resource "aws_iam_role_policy" "external_dns" {
-  name   = join("-", [var.prefix, "eks-external-dns"])
+  name   = "eks-external-dns"
   role   = aws_iam_role.eks_external_dns_role.name
   policy = jsonencode({
     Statement = [
@@ -79,16 +79,44 @@ resource "aws_iam_role_policy" "external_dns" {
 
 # Vault
 # https://github.com/hashicorp/vault-guides/blob/master/operations/aws-kms-unseal/terraform-aws/instance-profile.tf
-resource "aws_iam_role" "eks_vault_unseal_role" {
-  name = join("-", [var.prefix, "eks-vault-unseal"])
+resource "aws_iam_role" "eks_vault_role" {
+  name = join("-", [var.prefix, "eks-vault"])
   tags = var.tags
 
   assume_role_policy = data.aws_iam_policy_document.service_account_assume_role_policy.json
 }
 
+resource "aws_iam_role_policy" "vault_aws_secrets" {
+  name   = "eks-vault-aws-secrets"
+  role   = aws_iam_role.eks_vault_role.id
+  policy = jsonencode({
+    Statement = [{
+      Action = [
+        "iam:AttachUserPolicy",
+        "iam:CreateAccessKey",
+        "iam:CreateUser",
+        "iam:DeleteAccessKey",
+        "iam:DeleteUser",
+        "iam:DeleteUserPolicy",
+        "iam:DetachUserPolicy",
+        "iam:ListAccessKeys",
+        "iam:ListAttachedUserPolicies",
+        "iam:ListGroupsForUser",
+        "iam:ListUserPolicies",
+        "iam:PutUserPolicy",
+        "iam:AddUserToGroup",
+        "iam:RemoveUserFromGroup"
+      ]
+      Effect = "Allow"
+      Resource = "*"
+    }]
+    Version = "2012-10-17"
+  })
+}
+
 resource "aws_iam_role_policy" "vault_kms_unseal" {
-  name   = join("-", [var.prefix, "eks-vault-unseal"])
-  role   = aws_iam_role.eks_vault_unseal_role.id
+  name   = "eks-vault-unseal"
+  role   = aws_iam_role.eks_vault_role.id
   policy = jsonencode({
     Statement = [{
       Action = [
