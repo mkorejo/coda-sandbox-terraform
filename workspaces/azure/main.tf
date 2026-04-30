@@ -3,7 +3,7 @@
 #########################
 
 locals {
-  location = "Central US"
+  location = "East US"
   prefix   = "mkorejo-sandbox"
 
   my_ip = "72.204.149.59/32"
@@ -18,11 +18,10 @@ provider "azurerm" {
 }
 
 terraform {
-  backend "remote" {
-    organization = "muradkorejo"
-
-    workspaces {
-      name = "azure"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0"
     }
   }
 }
@@ -86,18 +85,6 @@ resource "azurerm_network_security_group" "nginx_plus" {
     source_address_prefix      = "Internet"
     destination_address_prefix = "VirtualNetwork"
   }
-
-  security_rule {
-    name                       = "allow-ssh"
-    priority                   = 300
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = local.my_ip
-    destination_address_prefix = "VirtualNetwork"
-  }
 }
 
 #########################
@@ -138,13 +125,11 @@ resource "azurerm_lb" "lb" {
 
 resource "azurerm_lb_backend_address_pool" "lb" {
   name                = join("-", [local.prefix, "lb-backend-pool"])
-  resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
 }
 
 resource "azurerm_lb_probe" "lb" {
   name                = join("-", [local.prefix, "lb-probe"])
-  resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
   port                = 80
   protocol            = "Http"
@@ -154,11 +139,10 @@ resource "azurerm_lb_probe" "lb" {
 
 resource "azurerm_lb_rule" "http" {
   name                           = join("-", [local.prefix, "lb-rule-http"])
-  resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
   frontend_ip_configuration_name = join("-", [local.prefix, "lb-frontend-ip-config"])
   frontend_port                  = 80
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.lb.id
+  backend_address_pool_ids        = [azurerm_lb_backend_address_pool.lb.id]
   backend_port                   = 80
   probe_id                       = azurerm_lb_probe.lb.id
   protocol                       = "Tcp"
@@ -166,11 +150,10 @@ resource "azurerm_lb_rule" "http" {
 
 resource "azurerm_lb_rule" "https" {
   name                           = join("-", [local.prefix, "lb-rule-https"])
-  resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
   frontend_ip_configuration_name = join("-", [local.prefix, "lb-frontend-ip-config"])
   frontend_port                  = 443
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.lb.id
+  backend_address_pool_ids        = [azurerm_lb_backend_address_pool.lb.id]
   backend_port                   = 443
   probe_id                       = azurerm_lb_probe.lb.id
   protocol                       = "Tcp"
