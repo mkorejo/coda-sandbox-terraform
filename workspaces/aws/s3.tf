@@ -2,13 +2,13 @@
 ########## S3 ###########
 #########################
 
-# Logging bucket — receives S3 access logs from the main bucket.
+# Logging bucket for S3 access logs.
 # Uses a bucket policy for log delivery (compatible with ACLs disabled).
 module "s3_logs" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "5.13.0"
 
-  bucket = join("-", [local.prefix, "dev-logs"])
+  bucket = join("-", [local.prefix, "logs"])
   tags   = merge(local.tags, { "Name" = join("-", [local.prefix, "dev-logs"]) })
 
   # Grant S3 log delivery write access via bucket policy
@@ -24,7 +24,7 @@ module "s3_logs" {
   }
 }
 
-# Private dev bucket
+# Private DEV bucket
 module "s3_dev_private" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "5.13.0"

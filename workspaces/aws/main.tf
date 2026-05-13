@@ -2,6 +2,7 @@
 ########## VPC ##########
 #########################
 
+/*
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/6.6.1
 module "sandbox_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -30,6 +31,7 @@ module "sandbox_vpc" {
   # enable_s3_endpoint removed in v4+ — use the aws_vpc_endpoint resource or
   # the terraform-aws-modules/vpc/aws//modules/vpc-endpoints submodule instead
 }
+*/
 
 #########################
 #### Security Groups ####
@@ -124,6 +126,7 @@ resource "aws_security_group_rule" "allow_web" {
 ########## EC2 ##########
 #########################
 
+/*
 resource "aws_instance" "rke_nodes" {
   for_each = toset([
     "rke-control-plane-1",
@@ -148,11 +151,13 @@ resource "aws_instance" "rke_nodes" {
     volume_size = 50
   }
 }
+*/
 
 #########################
 ########## EKS ##########
 #########################
 
+/*
 module "sandbox_eks" {
   count  = 0
   source = "../../modules/eks"
@@ -169,48 +174,4 @@ module "sandbox_eks" {
   node_group_scale_min     = "1"
   node_group_ssh_key       = "muradkorejo"
 }
-
-#########################
-###### PostgreSQL #######
-#########################
-
-
-
-#########################
-###### Rancher IAM ######
-#########################
-
-module "rancher_iam" {
-  source = "../../modules/terraform-aws-rancher-iam"
-
-  tags = local.tags
-}
-
-#########################
-##### Terraform IAM #####
-#########################
-
-resource "aws_iam_role" "terraform" {
-  name = "service-terraform"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-
-  tags = local.tags
-}
-
-resource "aws_iam_role_policy_attachment" "terraform" {
-  role       = aws_iam_role.terraform.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
+*/
