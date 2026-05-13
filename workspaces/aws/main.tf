@@ -2,10 +2,10 @@
 ########## VPC ##########
 #########################
 
-# https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/2.32.0
+# https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/6.6.1
 module "sandbox_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.77.0"
+  version = "6.6.1"
 
   name = local.prefix
   cidr = "10.0.0.0/16"
@@ -13,11 +13,11 @@ module "sandbox_vpc" {
 
   private_subnet_tags = {
     "kubernetes.io/cluster/muradkorejo-eks" = "shared"
-    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/role/internal-elb"       = "1"
   }
-  public_subnet_tags  = {
+  public_subnet_tags = {
     "kubernetes.io/cluster/muradkorejo-eks" = "shared"
-    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/role/elb"                = "1"
   }
 
   azs             = ["us-east-1c", "us-east-1d", "us-east-1f"]
@@ -27,7 +27,8 @@ module "sandbox_vpc" {
   enable_dns_hostnames = true
   enable_nat_gateway   = true
   single_nat_gateway   = true
-  enable_s3_endpoint   = true
+  # enable_s3_endpoint removed in v4+ — use the aws_vpc_endpoint resource or
+  # the terraform-aws-modules/vpc/aws//modules/vpc-endpoints submodule instead
 }
 
 #########################
