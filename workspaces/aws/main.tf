@@ -38,7 +38,7 @@ module "sandbox_vpc" {
 resource "aws_security_group" "allow_all_outgoing" {
   name        = join("-", [local.prefix, "allow-all-outgoing"])
   description = "Allow all outgoing communication"
-  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-all-outgoing"])})
+  tags        = merge(local.tags, { "Name" = join("-", [local.prefix, "allow-all-outgoing"]) })
   vpc_id      = module.sandbox_vpc.vpc_id
 
   egress {
@@ -52,35 +52,35 @@ resource "aws_security_group" "allow_all_outgoing" {
 resource "aws_security_group" "allow_rdp" {
   name        = join("-", [local.prefix, "allow-rdp"])
   description = "Allow RDP"
-  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-rdp"])})
+  tags        = merge(local.tags, { "Name" = join("-", [local.prefix, "allow-rdp"]) })
   vpc_id      = module.sandbox_vpc.vpc_id
 }
 
 resource "aws_security_group" "allow_ssh" {
   name        = join("-", [local.prefix, "allow-ssh"])
   description = "Allow SSH"
-  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-ssh"])})
+  tags        = merge(local.tags, { "Name" = join("-", [local.prefix, "allow-ssh"]) })
   vpc_id      = module.sandbox_vpc.vpc_id
 }
 
 resource "aws_security_group" "allow_web" {
   name        = join("-", [local.prefix, "allow-web"])
   description = "Allow HTTP/HTTPS"
-  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "allow-web"])})
+  tags        = merge(local.tags, { "Name" = join("-", [local.prefix, "allow-web"]) })
   vpc_id      = module.sandbox_vpc.vpc_id
 }
 
 resource "aws_security_group" "rke_nodes" {
   name        = join("-", [local.prefix, "rke-nodes"])
   description = "Allow all inbound communication from RKE nodes"
-  tags        = merge(local.tags, {"Name" = join("-", [local.prefix, "rke-nodes"])})
+  tags        = merge(local.tags, { "Name" = join("-", [local.prefix, "rke-nodes"]) })
   vpc_id      = module.sandbox_vpc.vpc_id
 
   ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    self        = true
+    from_port = 0
+    to_port   = 65535
+    protocol  = "tcp"
+    self      = true
   }
 }
 
@@ -131,13 +131,13 @@ resource "aws_instance" "rke_nodes" {
     "rke-worker-2"
   ])
 
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.small"
-  key_name                    = "muradkorejo"
-  subnet_id                   = module.sandbox_vpc.public_subnets[0]
-  tags                        = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
-  volume_tags                 = merge(local.tags, {"Name" = join("-", [local.prefix, each.value])})
-  vpc_security_group_ids      = [
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.small"
+  key_name      = "muradkorejo"
+  subnet_id     = module.sandbox_vpc.public_subnets[0]
+  tags          = merge(local.tags, { "Name" = join("-", [local.prefix, each.value]) })
+  volume_tags   = merge(local.tags, { "Name" = join("-", [local.prefix, each.value]) })
+  vpc_security_group_ids = [
     aws_security_group.allow_all_outgoing.id,
     aws_security_group.allow_ssh.id,
     aws_security_group.allow_web.id,

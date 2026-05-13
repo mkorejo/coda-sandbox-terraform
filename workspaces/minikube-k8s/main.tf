@@ -52,7 +52,7 @@ resource "helm_release" "cert-manager" {
   chart      = "cert-manager"
   version    = "v0.15.0-alpha.2"
   namespace  = "cert-manager"
-  depends_on = [ helm_release.crds, kubernetes_namespace.namespaces ]
+  depends_on = [helm_release.crds, kubernetes_namespace.namespaces]
 }
 
 resource "helm_release" "rancher" {
@@ -61,7 +61,7 @@ resource "helm_release" "rancher" {
   chart      = "rancher"
   version    = "2.5.2"
   namespace  = "cattle-system"
-  depends_on = [ helm_release.crds, helm_release.cert-manager, kubernetes_namespace.namespaces ]
+  depends_on = [helm_release.crds, helm_release.cert-manager, kubernetes_namespace.namespaces]
 
   set {
     name  = "hostname"

@@ -10,7 +10,6 @@ terraform {
 
   cloud {
     organization = "muradkorejo"
-
     workspaces {
       name = "aws"
     }
@@ -18,5 +17,6 @@ terraform {
 }
 
 provider "aws" {
+  alias  = "use1"
   region = local.region
 }

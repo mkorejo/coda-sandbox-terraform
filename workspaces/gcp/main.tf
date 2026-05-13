@@ -9,20 +9,20 @@ module "vpc" {
 
   subnets = [
     {
-      description           = "Primary subnet"
-      subnet_name           = local.primary_subnet
-      subnet_ip             = "10.10.10.0/24"
-      subnet_region         = local.primary_region
-    # subnet_flow_logs      = "true"
-    # subnet_private_access = "true"
+      description   = "Primary subnet"
+      subnet_name   = local.primary_subnet
+      subnet_ip     = "10.10.10.0/24"
+      subnet_region = local.primary_region
+      # subnet_flow_logs      = "true"
+      # subnet_private_access = "true"
     },
     {
-      description           = "Secondary subnet"
-      subnet_name           = local.secondary_subnet
-      subnet_ip             = "10.10.20.0/24"
-      subnet_region         = local.secondary_region
-    # subnet_flow_logs      = "true"
-    # subnet_private_access = "true"
+      description   = "Secondary subnet"
+      subnet_name   = local.secondary_subnet
+      subnet_ip     = "10.10.20.0/24"
+      subnet_region = local.secondary_region
+      # subnet_flow_logs      = "true"
+      # subnet_private_access = "true"
     },
   ]
 
@@ -52,11 +52,11 @@ module "vpc" {
 
   routes = [
     {
-      name                   = "egress-internet"
-      description            = "Route through IGW to internet"
-      destination_range      = "0.0.0.0/0"
-      tags                   = "egress-internet"
-      next_hop_internet      = "true"
+      name              = "egress-internet"
+      description       = "Route through IGW to internet"
+      destination_range = "0.0.0.0/0"
+      tags              = "egress-internet"
+      next_hop_internet = "true"
     }
   ]
 }

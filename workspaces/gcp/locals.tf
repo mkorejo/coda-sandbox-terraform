@@ -8,8 +8,8 @@ locals {
   secondary_subnet = join("-", [local.prefix, "subnet-02"])
 
   tags = map(
-    "Owner",       "mkorejo@presidio.com",
-    "Managed By",  "Terraform",
-    "Source",      "https://github.com/mkorejo/coda-sandbox-terraform"
+    "Owner", "mkorejo@presidio.com",
+    "Managed By", "Terraform",
+    "Source", "https://github.com/mkorejo/coda-sandbox-terraform"
   )
 }

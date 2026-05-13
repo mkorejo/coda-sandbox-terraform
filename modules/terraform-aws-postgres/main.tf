@@ -32,7 +32,7 @@ resource "aws_db_instance" "sandbox_rds" {
   skip_final_snapshot       = var.rds_skip_final_snapshot
   storage_type              = "gp2"
   tags                      = var.tags
-  vpc_security_group_ids    = [ aws_security_group.allow_postgres.id ]
+  vpc_security_group_ids    = [aws_security_group.allow_postgres.id]
 }
 
 variable "prefix" {}

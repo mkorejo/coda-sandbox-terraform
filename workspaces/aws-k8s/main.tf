@@ -9,7 +9,7 @@ resource "kubernetes_namespace" "fluxcd" {
 # Install GitOps operators
 resource "helm_release" "argocd" {
   name       = local.argocd_namespace
-  depends_on = [ kubernetes_namespace.argocd ]
+  depends_on = [kubernetes_namespace.argocd]
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   version    = "2.9.2"
@@ -18,7 +18,7 @@ resource "helm_release" "argocd" {
 
 resource "helm_release" "fluxcd" {
   name       = local.fluxcd_namespace
-  depends_on = [ kubernetes_namespace.fluxcd ]
+  depends_on = [kubernetes_namespace.fluxcd]
   repository = "https://charts.fluxcd.io"
   chart      = "flux"
   version    = "1.5.0"
@@ -43,7 +43,7 @@ resource "helm_release" "fluxcd" {
 # Install additional CRDs
 resource "helm_release" "crds" {
   name       = "crds"
-  depends_on = [ helm_release.argocd, helm_release.fluxcd ]
+  depends_on = [helm_release.argocd, helm_release.fluxcd]
   repository = "https://mkorejo.github.io/helm-charts"
   chart      = "crds"
   version    = "0.3.0"
@@ -52,7 +52,7 @@ resource "helm_release" "crds" {
 
 resource "helm_release" "fluxcd_helm_operator" {
   name       = "fluxcd-helm-operator"
-  depends_on = [ helm_release.crds ]
+  depends_on = [helm_release.crds]
   repository = "https://charts.fluxcd.io"
   chart      = "helm-operator"
   version    = "1.2.0"
@@ -76,7 +76,7 @@ resource "helm_release" "fluxcd_helm_operator" {
 
 resource "helm_release" "argocd_infra_apps" {
   name       = "infra-apps"
-  depends_on = [ helm_release.crds ]
+  depends_on = [helm_release.crds]
   repository = "https://mkorejo.github.io/helm-charts"
   chart      = "infra-apps"
   version    = "0.1.3"
@@ -148,7 +148,7 @@ resource "null_resource" "delay" {
 
 resource "helm_release" "route53_issuer" {
   name       = "cert-manager-issuer"
-  depends_on = [ helm_release.argocd_infra_apps, null_resource.delay ]
+  depends_on = [helm_release.argocd_infra_apps, null_resource.delay]
   repository = "https://mkorejo.github.io/helm-charts"
   chart      = "cert-manager-issuer"
   namespace  = "cert-manager"

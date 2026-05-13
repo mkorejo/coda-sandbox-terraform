@@ -13,7 +13,7 @@ module "s3_logs" {
 
   # Grant S3 log delivery write access via bucket policy
   attach_access_log_delivery_policy         = true
-  access_log_delivery_policy_source_buckets = ["arn:aws:s3:::${join("-", [local.prefix, "dev-private"])}"] 
+  access_log_delivery_policy_source_buckets = ["arn:aws:s3:::${join("-", [local.prefix, "dev-private"])}"]
 
   server_side_encryption_configuration = {
     rule = {

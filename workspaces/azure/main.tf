@@ -124,8 +124,8 @@ resource "azurerm_lb" "lb" {
 }
 
 resource "azurerm_lb_backend_address_pool" "lb" {
-  name                = join("-", [local.prefix, "lb-backend-pool"])
-  loadbalancer_id     = azurerm_lb.lb.id
+  name            = join("-", [local.prefix, "lb-backend-pool"])
+  loadbalancer_id = azurerm_lb.lb.id
 }
 
 resource "azurerm_lb_probe" "lb" {
@@ -142,7 +142,7 @@ resource "azurerm_lb_rule" "http" {
   loadbalancer_id                = azurerm_lb.lb.id
   frontend_ip_configuration_name = join("-", [local.prefix, "lb-frontend-ip-config"])
   frontend_port                  = 80
-  backend_address_pool_ids        = [azurerm_lb_backend_address_pool.lb.id]
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.lb.id]
   backend_port                   = 80
   probe_id                       = azurerm_lb_probe.lb.id
   protocol                       = "Tcp"
@@ -153,7 +153,7 @@ resource "azurerm_lb_rule" "https" {
   loadbalancer_id                = azurerm_lb.lb.id
   frontend_ip_configuration_name = join("-", [local.prefix, "lb-frontend-ip-config"])
   frontend_port                  = 443
-  backend_address_pool_ids        = [azurerm_lb_backend_address_pool.lb.id]
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.lb.id]
   backend_port                   = 443
   probe_id                       = azurerm_lb_probe.lb.id
   protocol                       = "Tcp"
