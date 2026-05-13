@@ -1,9 +1,5 @@
-variable "aws_account_id" {
-  type = string
-}
-
 variable "features" {
-  type = map(bool)
+  type        = map(bool)
   description = "List of features/resources to enable"
   default = {
     "eks"         = true
