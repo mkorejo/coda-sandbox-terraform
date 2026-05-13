@@ -1,2 +1,3 @@
-**/.terraform
+**/.terraform*
 **/local.auto.tfvars
+**/terraform.tfstate*
