@@ -14,3 +14,5 @@ data "aws_ami" "ubuntu" {
   # Canonical
   owners = ["099720109477"]
 }
+
+data "aws_caller_identity" "current" {}
