@@ -31,7 +31,6 @@ module "sandbox_vpc" {
   # enable_s3_endpoint removed in v4+ — use the aws_vpc_endpoint resource or
   # the terraform-aws-modules/vpc/aws//modules/vpc-endpoints submodule instead
 }
-*/
 
 #########################
 #### Security Groups ####
@@ -121,6 +120,7 @@ resource "aws_security_group_rule" "allow_web" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
 }
+*/
 
 #########################
 ########## EC2 ##########
